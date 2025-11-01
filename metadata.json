@@ -1,0 +1,24 @@
+{
+    "KPlugin":
+    {
+        "Authors": 
+        [{
+            "Name": "Miguel",
+            "Email": "ferrazcerqueira@proton.me"
+        }],
+
+        "Icon": "akregator",
+        "Category": "Online Services",
+        "Description": "A customizable RSS Reader for the KDE Plasma desktop.",
+        "Id": "KBulletin",
+        "Name": "KBulletin",
+        "License": "GNU General Public License v3.0",
+        "Website": "https://github.com/miguel-cerqueira/KBulletin",
+        "BugReportURL": "https://github.com/miguel-cerqueira/KBulletin/issues",
+        "ConfigPage": "config.qml"
+    },
+
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API": "declarativeappletscript",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

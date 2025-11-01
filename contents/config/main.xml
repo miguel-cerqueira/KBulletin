@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+
+
+        <entry name="bookmarks" type="String">
+            <default><![CDATA[
+                [
+                    {
+                        "title":        "A Beautiful Message: Raid Ant And Cockroach Poison Just Released An Emotional Commercial Telling All Women They’re Beautiful No Matter What",
+                        "description":  "It’s always wonderful when a major brand celebrates women with inclusive and supportive messaging, which is why this story is going to make you stand up and cheer: Raid Ant And Cockroach Poison just released an emotional commercial telling all women they’re beautiful no matter what!",
+                        "thumbnail":    "https://clickhole.com/wp-content/uploads/2025/05/Untitled-design-69.png",
+                        "link":         "https://clickhole.com/a-beautiful-message-raid-ant-and-cockroach-poison-just-released-an-emotional-commercial-telling-all-women-theyre-beautiful-no-matter-what/",
+                        "pubDate":      "June 2, 2025",
+                        "author":       "",
+                        "source":       "Clickhole.com"
+                    },
+                    {
+                        "title":        "Inside the Long Friendship Between Trump and Epstein",
+                        "description":  "<p>In the swirl of money and sun-tanned women that was their Palm Beach-and-Manhattan set, Donald J. Trump and Jeffrey Epstein spent nearly 15 years mingling side-by-side as public friends.</p> <p>There were lavish dinners with boldface names at Mr. Epstein’s mansion on the Upper East Side and raucous parties with cheerleaders and models at Mr. Trump’s private club and residence at Mar-a-Lago. In between, there were trips back and forth from Florida to New York on one of Mr. Epstein’s private jets.</p>",
+                        "thumbnail":    "https://static01.nyt.com/images/2025/07/18/multimedia/00dc-trump-epstein-bgcv/00dc-trump-epstein-bgcv-superJumbo.jpg?quality=75&auto=webp",
+                        "link":         "https://www.nytimes.com/2025/07/19/us/politics/inside-trump-epstein-friendship.html",
+                        "pubDate":      "July 19, 2025 at 8:58 PM GMT+1",
+                        "author":       "NYTimes",
+                        "source":       "NYTimes.com"
+                    }
+                ]
+            ]]></default>
+        </entry>
+
+
+
+        <entry name="topics" type="String">
+            <default>
+                [
+                    "Europe",
+                    "USA",
+                    "World",
+                    "Media",
+                    "Tech",
+                    "Science",
+                    "Space",
+                    "Motors",
+                    "Economy",
+                    "Football"
+                ]
+            </default>
+        </entry>
+
+
+        <entry name="refreshInterval" type="Int">
+            <default>60</default>
+        </entry>
+
+
+        <entry name="sources" type="String">
+            <default>   
+                [
+                    {"source":"Le Monde"                ,"url":"https://www.lemonde.fr/en/europe/rss_full.xml"                 ,"topic":"Europe"},
+
+                    {"source":"PBS News"                ,"url":"https://www.pbs.org/newshour/feeds/rss/politics"               ,"topic":"USA"},
+                    
+                    {"source":"The Diplomat"            ,"url":"https://thediplomat.com/feed/"                                 ,"topic":"World"},
+
+                    {"source":"France24"                ,"url":"https://www.france24.com/en/europe/rss"                        ,"topic":"Europe"},
+
+                    {"source":"Kyiv Independent"        ,"url":"https://kyivindependent.com/news-archive/rss/"                 ,"topic":"Europe"},
+
+                    {"source":"Space"                   ,"url":"https://www.space.com/feeds.xml"                               ,"topic":"Space"},
+
+                    {"source":"Science"                 ,"url":"https://www.science.org/rss/news_current.xml"                  ,"topic":"Science"},
+
+                    {"source":"The Drive"               ,"url":"https://www.thedrive.com/feed"                                 ,"topic":"Motors"},
+
+                    {"source":"InsideEVs"               ,"url":"https://insideevs.com/rss/articles/all/"                       ,"topic":"Motors"},
+
+                    {"source":"TechRadar"               ,"url":"https://www.techradar.com/feeds/articletype/news"              ,"topic":"Tech"},
+                    
+                    {"source":"Standard"                ,"url":"https://www.standard.co.uk/sport/football/rss"                 ,"topic":"Football"},
+
+                    {"source":"ArsTechnica"             ,"url":"https://feeds.arstechnica.com/arstechnica/index"               ,"topic":"Tech"},
+
+                    {"source":"IGN"                     ,"url":"https://www.ign.com/rss/articles/feed"                         ,"topic":"Media"},
+
+                    {"source":"New Scientist"           ,"url":"https://www.newscientist.com/feed/home/?cmpid=RSS%7CNSNS-Home" ,"topic":"Science"},
+
+                    {"source":"Premier League"          ,"url":"https://www.reddit.com/r/PremierLeague/.rss"                   ,"topic":"Football"},
+                    {"source":"Tech News"               ,"url":"https://www.reddit.com/r/technews/.rss"                        ,"topic":"Tech"},
+                    {"source":"Futurology"              ,"url":"https://www.reddit.com/r/Futurology/.rss"                      ,"topic":"Science"},
+
+                    {"source":"United Nations"          ,"url":"https://news.un.org/feed/subscribe/en/news/all/rss.xml"        ,"topic":"World"},
+
+                    {"source":"Financial Times"         ,"url":"https://www.ft.com/rss/home"                                   ,"topic":"Economy"},
+
+                    {"source":"NVIDIA"                  ,"url":"https://nvidianews.nvidia.com/releases.xml"                    ,"topic":"Tech"},
+
+                    {"source":"NBC - US"                ,"url":"https://feeds.nbcnews.com/nbcnews/public/news"                 ,"topic":"USA"},
+                    {"source":"NBC - Economy"           ,"url":"https://feeds.nbcnews.com/nbcnews/public/business"             ,"topic":"Economy"},
+
+                    {"source":"BBC - UK"                ,"url":"https://feeds.bbci.co.uk/news/uk/rss.xml"                      ,"topic":"Europe"},
+                    {"source":"BBC - World"             ,"url":"https://feeds.bbci.co.uk/news/world/rss.xml"                   ,"topic":"World"},
+
+                    {"source":"The Guardian - US"       ,"url":"https://www.theguardian.com/us-news/rss"                       ,"topic":"USA"},
+                    {"source":"The Guardian - World"    ,"url":"https://www.theguardian.com/world/rss"                         ,"topic":"World"},
+
+                    {"source":"NYTimes - Headlines"     ,"url":"https://rss.nytimes.com/services/xml/rss/nyt/World.xml"        ,"topic":"World"},
+                    {"source":"NYTimes - Economy"       ,"url":"https://rss.nytimes.com/services/xml/rss/nyt/Economy.xml"      ,"topic":"Economy"},
+
+                    {"source":"Bloomberg - Headlines"   ,"url":"https://feeds.bloomberg.com/politics/news.rss"                 ,"topic":"World"},
+                    {"source":"Bloomberg - Markets"     ,"url":"https://feeds.bloomberg.com/markets/news.rss"                  ,"topic":"Economy"},
+                    {"source":"Bloomberg - Economy"     ,"url":"https://feeds.bloomberg.com/technology/news.rss"               ,"topic":"Economy"}, 
+
+                    {"source":"WSJ - Politics"          ,"url":"https://feeds.content.dowjones.io/public/rss/socialpoliticsfeed" ,"topic":"USA"},
+                    {"source":"WSJ - Markets"           ,"url":"https://feeds.content.dowjones.io/public/rss/WSJcomUSBusiness"   ,"topic":"Economy"},
+                    {"source":"WSJ - Economy"           ,"url":"https://feeds.content.dowjones.io/public/rss/socialeconomyfeed"  ,"topic":"Economy"}
+                ]
+            </default>
+        </entry>
+        
+
+        <entry name="banned" type="String">
+            <default>
+                [
+                    "Experts Reveal", 
+                    "The Truth About", 
+                    "According To A Scientist", 
+                    "You Won't Believe", 
+                    "Never Guess", 
+                    "One Trick"
+                ]
+            </default>
+        </entry>
+
+        <entry name="maxArticles" type="Int">
+            <default>100</default>
+        </entry>
+</kcfg>
