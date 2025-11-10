@@ -1,8 +1,8 @@
 import QtQml
 import QtQuick
-import QtQuick.Layouts 
+import QtQuick.Layouts
 import QtQuick.Controls
-    
+
 import org.kde.plasma.plasmoid
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.kirigami as Kirigami
@@ -15,54 +15,53 @@ import "../app/bookmarks.js" as BookmarkManager
 Item
 {
     id: root
-    
-    Layout.minimumWidth:    main.inPanel ? 600 : 450
-    Layout.minimumHeight:   main.inPanel ? 600 : 450
-    implicitWidth:          main.inPanel ? 600 : 450
-    implicitHeight:         main.inPanel ? 600 : 450
+
+    Layout.minimumWidth:  800
+    Layout.minimumHeight: 600
+    implicitWidth:        800
+    implicitHeight:       600
 
 
-    property  var activeSources: JSON.parse(plasmoid.configuration.sources).map(entry => entry.url).slice(0, 2)
+    property  var activeSources: JSON.parse(plasmoid.configuration.sources).map(entry => entry.url).slice(0, 2)  // init to 2 sources for faster setup
     property  var allSources: JSON.parse(plasmoid.configuration.sources)
-    property bool isCardExpanded: false                                              // card expansion
+    property bool isCardExpanded: false                                              // for card expansion
     property bool bookmarksDisplay: false                                           // bookmarks trigger
-    property bool hasRemoved: false                                                // bookmark button management
+    property bool hasRemoved: false                                                // for bookmark button management
     property  var sidebarSources: ({})
     property  int imagesLoading: 0
     property  int refreshMinutes: Math.max(1, JSON.parse(plasmoid.configuration.refreshInterval))
 
 
-    property real cardsWidth: 
+    property real cardsWidth:
     {
-        if (isCardExpanded) 
+        if (isCardExpanded)
         {
-            if (articlesArea.width > 1000) return (articlesArea.width / 5) - Kirigami.Units.largeSpacing
-            if (articlesArea.width > 750)  return (articlesArea.width / 4) - Kirigami.Units.largeSpacing
-            if (articlesArea.width > 450)  return (articlesArea.width / 3) - Kirigami.Units.mediumSpacing  
-            if (articlesArea.width > 250)  return (articlesArea.width / 2) - Kirigami.Units.smallSpacing
-            return articlesArea.width - Kirigami.Units.smallSpacing
-        } 
-        else 
+            if (articlesArea.width > 2000)
+                return (articlesArea.width / 6) - Kirigami.Units.largeSpacing
+
+            else return (articlesArea.width / (Math.max(1, Math.round(articlesArea.width / 200)))) - Kirigami.Units.largeSpacing
+        }
+        else
         {
-            if (articlesArea.width > 2000) return (articlesArea.width / 7) - Kirigami.Units.largeSpacing
-            if (articlesArea.width > 1300) return (articlesArea.width / 6) - Kirigami.Units.largeSpacing
-            if (articlesArea.width > 1000) return (articlesArea.width / 5) - Kirigami.Units.largeSpacing
-            if (articlesArea.width > 700)  return (articlesArea.width / 4) - Kirigami.Units.largeSpacing
-            if (articlesArea.width > 400)  return (articlesArea.width / 3) - Kirigami.Units.largeSpacing
-            return (articlesArea.width / 2) - Kirigami.Units.largeSpacing
+            if (articlesArea.width > 2000)
+                return (articlesArea.width / 5) - Kirigami.Units.largeSpacing
+
+            else return (articlesArea.width / (Math.max(1, Math.round(articlesArea.width / 240)))) - Kirigami.Units.largeSpacing
         }
     }
 
 
-    QtObject 
+    QtObject
     {
         id: expandedCard
 
-        property string title: ""
-        property string description: ""
-        property string thumbnail: ""
+        property bool welcome: true
+
+        property string title: "Welcome!"
+        property string description: "<p> KBulletin allows you to customize your feed to your liking through the use of the configuration menu, accessed by right-clicking the widget. </p> <p> It is optimized to work with the default sources, but most written news media is supported. Videos, podcasts, and comic strips, are unsupported at this time. </p> <p> You can expand a card by selecting it, and close it by clicking the image or the small button on the bottom right. In panel mode, you can also increase the window's size by dragging the corners. </p> <p> Read Responsibly! :) </p"
+        property string thumbnail: Qt.resolvedUrl("../assets/rss.png")
         property string link: ""
-        property string pubDate: ""
+        property string pubDate: new Date()
         property string author: ""
         property string source: ""
     }
@@ -73,33 +72,22 @@ Item
     ListModel { id: bookmarksModel }
 
 
-    Component.onCompleted: 
+    Component.onCompleted:
     {
+        isCardExpanded = true
+
         KBulletin.fetchSources(activeSources)
         KBulletin.filterSources()
 
-        // Welcome Card
-        expandedCard.title       = "Welcome!"
-        expandedCard.description = "<p> KBulletin allows you to customize your feed to your liking through the use of the configuration menu, accessed by right-clicking the widget. </p> \n" 
-                                 + "<p> Although it is optimized to work with the default sources, any written broadcast media is supported. Videos, podcasts, and comic strips, are unsupported at this time. </p> \n"
-                                 + "<p> You can expand a card by selecting it, and close it by clicking the image or the small button on the bottom right. You can also increase the window's size by dragging the corners. </p>"
-                                 + "<p> </p>"
-                                 + "<p> Read responsibly! :) </p>"
-        expandedCard.thumbnail   = Qt.resolvedUrl("../assets/rss.png")
-        expandedCard.link        = "https://github.com/miguel-cerqueira/KBulletin/"
-        expandedCard.pubDate     = new Date()
-        expandedCard.author      = ""
-        expandedCard.source      = "KBulletin"
-        isCardExpanded = true
 
         // Sidebar Setup
         sidebarSources = {}
-        for (let i = 0; i < allSources.length; i++) 
+        for (let i = 0; i < allSources.length; i++)
             sidebarSources[allSources[i].source] = allSources[i].url
     }
 
 
-    Connections 
+    Connections
     {
         target: plasmoid.configuration
 
@@ -116,7 +104,7 @@ Item
             }
 
             sidebarSources = {}
-            for (let i = 0; i < allSources.length; i++) 
+            for (let i = 0; i < allSources.length; i++)
                 sidebarSources[allSources[i].source] = allSources[i].url
 
             KBulletin.filterSources()
@@ -128,14 +116,14 @@ Item
     }
 
 
-    Timer 
+    Timer
     {
         id: refreshTimer
 
-        interval: refreshMinutes * 60 * 1000                 /* So, apparently, interval measures in milliseconds */
-        repeat: true                                         /* After racking up 3 digits in bandwitdh charges,   */
-        running: true                                        /*   it is now fixed at minutes. Oops.               */
-        onTriggered: KBulletin.fetchSources(activeSources) 
+        interval: refreshMinutes * 60 * 1000
+        repeat: true
+        running: true
+        onTriggered: KBulletin.fetchSources(activeSources)
     }
 
 
@@ -148,26 +136,26 @@ Item
         // Side Area
         ColumnLayout
         {
-            Layout.preferredWidth: 75
-            Layout.minimumWidth: 75
+            Layout.preferredWidth: 150
+            Layout.minimumWidth: 150
             Layout.maximumWidth: 200
 
 
             // Loading Indicator
-            Rectangle 
+            Rectangle
             {
                 anchors.fill: parent
                 color: "transparent"
                 visible: root.imagesLoading > 0
                 z: 9999
 
-                MouseArea 
+                MouseArea
                 {
                     anchors.fill: parent
                     onClicked: {}
-                }   
+                }
 
-                PlasmaComponents.BusyIndicator 
+                PlasmaComponents.BusyIndicator
                 {
                     anchors.centerIn: parent
                     running: true
@@ -177,8 +165,8 @@ Item
 
             ColumnLayout
             {
-                id: sideArea    
-                
+                id: sideArea
+
                 visible: imagesLoading === 0
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -200,10 +188,10 @@ Item
                     flat: true
                     padding: 3
 
-                    onClicked: 
+                    onClicked:
                     {
                         sideArea.topicsVisible = !sideArea.topicsVisible
-                        
+
                         if (triangle == false)
                             text = "Topics ▽"
 
@@ -320,34 +308,20 @@ Item
                     padding: 3
                 }
 
-                RowLayout 
+                RowLayout
                 {
                     spacing: 3
 
                     PlasmaComponents.Button
                     {
-                        text: "Clear"
+                        text: "Clear List"
 
-                        onClicked: 
+                        onClicked:
                         {
                             search.text = ""
                             activeSources = []
                             sideArea.selectedTopicIndex = -1
                             KBulletin.filterSources()
-                        }
-                    }
-
-                    PlasmaComponents.Button 
-                    {
-                        id: refresh
-
-                        icon.name: "view-refresh"
-                        enabled: imagesLoading === 0 || bookmarksDisplay === true                        
-
-                        onClicked: 
-                        {
-                            search.text = ""
-                            KBulletin.fetchSources(activeSources)
                         }
                     }
                 }
@@ -387,7 +361,7 @@ Item
                             onExited: sourceDelegate.hovered = false
 
                             onClicked:
-                            {                                
+                            {
                                 let url = sidebarSources[model.source] || ""
                                 if (!url) return
 
@@ -402,7 +376,7 @@ Item
                         }
 
 
-                        ToolTip 
+                        ToolTip
                         {
                             visible: sourceDelegate.hovered
                             text: model.source
@@ -417,7 +391,7 @@ Item
                             padding: 6
 
 
-                            
+
                             // Active Indicator
                             Text
                             {
@@ -425,7 +399,7 @@ Item
                                 color: Kirigami.Theme.highlightColor
                                 font.pointSize: 9
 
-                                visible: 
+                                visible:
                                 {
                                     let url = sidebarSources[model.source] || ""
                                     return activeSources.indexOf(url) !== -1
@@ -439,24 +413,24 @@ Item
                                 height: 20
 
                                 property bool counted: false
-                                property string cachedDomain: 
+                                property string cachedDomain:
                                 {
                                     let url = model.url || ""
                                     if (!/^https?:\/\//i.test(url)) url = "https://" + url
-                                    
+
                                     let domainMatch = url.match(/^https?:\/\/(?:feeds\.|rss\.)?([^\/]+)/i)
                                     return domainMatch ? domainMatch[1] : ""
                                 }
-                                
+
                                 sourceSize.width: 32
                                 sourceSize.height: 32
 
-                                source: cachedDomain.length > 0 
+                                source: cachedDomain.length > 0
                                         ? "https://icons.duckduckgo.com/ip3/" + cachedDomain + ".ico"
                                         : Qt.resolvedUrl("../assets/newspaper.png")
 
-                                onStatusChanged: 
-                                { 
+                                onStatusChanged:
+                                {
                                     if (status === Image.Error)
                                         source = Qt.resolvedUrl("../assets/newspaper.png")
                                 }
@@ -497,7 +471,7 @@ Item
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                Kirigami.Icon 
+                Kirigami.Icon
                 {
                     id: scrollArrowUp
                     source: "go-up"
@@ -512,13 +486,13 @@ Item
                     visible: scrollArea.contentY > 0 && imagesLoading === 0
                     z: 999
 
-                    MouseArea 
+                    MouseArea
                     {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         hoverEnabled: true
 
-                        onClicked: 
+                        onClicked:
                         {
                             var scrollStep = 300
                             scrollArea.contentY = Math.max(scrollArea.contentY - scrollStep, 0)
@@ -526,7 +500,7 @@ Item
                     }
                 }
 
-                Kirigami.Icon 
+                Kirigami.Icon
                 {
                     id: scrollArrowDown
                     source: "go-down"
@@ -541,13 +515,13 @@ Item
                     visible: scrollArea.contentY + scrollArea.height < scrollArea.contentHeight && imagesLoading === 0
                     z: 999
 
-                    MouseArea 
+                    MouseArea
                     {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         hoverEnabled: true
 
-                        onClicked: 
+                        onClicked:
                         {
                             var scrollStep = 300
                             scrollArea.contentY = Math.min(scrollArea.contentY + scrollStep, scrollArea.contentHeight - scrollArea.height)
@@ -569,6 +543,7 @@ Item
 
             Layout.fillHeight: true
             Layout.fillWidth: true
+            Layout.alignment: Qt.AlignLeft
 
 
             // Top Bar
@@ -577,7 +552,24 @@ Item
                 id: topBar
 
                 width: mainArea.width
-                height: Kirigami.Units.gridUnit * 2.2
+                height: Kirigami.Units.gridUnit * 4
+
+                PlasmaComponents.Button
+                {
+                    id: refresh
+
+                    icon.name: "view-refresh"
+                    enabled: imagesLoading === 0 || bookmarksDisplay === true
+
+                    onClicked:
+                    {
+                        search.text = ""
+                        articlesModel.clear()
+                        imagesLoading = 0
+
+                        KBulletin.fetchSources(activeSources)
+                    }
+                }
 
 
                 PlasmaComponents.TextField
@@ -595,7 +587,7 @@ Item
                 PlasmaComponents.Button
                 {
                     id: bookmarkButton
-                    
+
                     checkable: true
                     Layout.preferredHeight: 30
                     ToolTip.delay: 500
@@ -608,13 +600,6 @@ Item
                     {
                         anchors.centerIn: parent
                         spacing: Kirigami.Units.smallSpacing
-                        
-                        Image
-                        {
-                            source: Qt.resolvedUrl("../assets/newspaper.png")
-                            width: 19
-                            height: 19
-                        }
 
                         Text
                         {
@@ -657,7 +642,7 @@ Item
                     {
                         anchors.centerIn: parent
                         spacing: Kirigami.Units.smallSpacing
-                        
+
                         Text
                         {
                             text: root.width > 600
@@ -672,7 +657,7 @@ Item
                 }
 
 
-                Kirigami.Dialog 
+                Kirigami.Dialog
                 {
                     id: configDialog
                     title: "Feed Options"
@@ -682,7 +667,7 @@ Item
                     anchors.centerIn: parent
                     padding: 3
 
-                    onAccepted: 
+                    onAccepted:
                     {
                         console.log("Settings saved")
                     }
@@ -708,7 +693,7 @@ Item
                                 text: "Word Ban"
                             }
 
-                            Text 
+                            Text
                             {
                                 text: " If any inserted word is found, the article will not enter your feed. \n You can remove banned words from the widget menu."
                                 color: Kirigami.Theme.textColor
@@ -716,7 +701,7 @@ Item
 
                             Item { height: 5 }
 
-                            TextField 
+                            TextField
                             {
                                 id: wordBanField
 
@@ -739,13 +724,13 @@ Item
                                 text: "Max articles per source"
                             }
 
-                            Text 
+                            Text
                             {
                                 text: " 0 for no limit."
                                 color: Kirigami.Theme.textColor
                             }
 
-                            Slider 
+                            Slider
                             {
                                 id: maxArticlesSlider
 
@@ -758,7 +743,7 @@ Item
                                 onValueChanged: indicatorForSlider.text = "Selected: " + value
                             }
 
-                            Text 
+                            Text
                             {
                                 id: indicatorForSlider
 
@@ -770,25 +755,25 @@ Item
                         }
                     }
 
-                    footer: Kirigami.ActionToolBar 
+                    footer: Kirigami.ActionToolBar
                     {
-                        actions: 
+                        actions:
                         [
-                            Kirigami.Action 
+                            Kirigami.Action
                             {
                                 icon.name: "dialog-ok-apply"
                                 text: i18n("Apply")
 
-                                onTriggered: 
-                                {                                        
+                                onTriggered:
+                                {
                                     var newWord = wordBanField.text.trim()
                                     var existing = plasmoid.configuration.banned ? plasmoid.configuration.banned.trim() : ""
 
-                                    if (newWord.length > 0) 
+                                    if (newWord.length > 0)
                                     {
-                                        if (existing.length > 0) 
+                                        if (existing.length > 0)
                                             plasmoid.configuration.banned = existing + ", " + newWord
-                                        else 
+                                        else
                                             plasmoid.configuration.banned = newWord
                                     }
 
@@ -799,10 +784,10 @@ Item
                                     maxArticlesSlider.value = plasmoid.configuration.maxArticles
 
                                     configDialog.close()
-                                    articlesModel.clear() 
+                                    articlesModel.clear()
                                 }
                             },
-                            Kirigami.Action 
+                            Kirigami.Action
                             {
                                 icon.name: "dialog-cancel"
                                 text: i18n("Cancel")
@@ -814,12 +799,12 @@ Item
                 }
             }
 
-            
+
             // ------------------------------------------------ Articles Area -------------------------------------------------------
             RowLayout
             {
                 id: cardsRow
-                
+
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -827,14 +812,13 @@ Item
                 // isCardExpanded Card
                 ColumnLayout
                 {
+                    id: mainCard
+
                     visible: isCardExpanded
 
-                    width: isCardExpanded ? root.width > 1500
-                                            ? 500
-                                            : root.width >= 750
-                                                ? 400
-                                                : 300
-                                            : 300
+                    width: articlesArea.width > 2000
+                              ? cardsRow.width * 0.3
+                              : cardsRow.width * 0.4
                     Layout.preferredWidth: width
                     Layout.maximumWidth: width
                     Layout.minimumWidth: 0
@@ -846,7 +830,7 @@ Item
                         id: clickedCard
 
                         onClicked: isCardExpanded = false
-                        
+
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.maximumHeight: cardsRow.height * 0.85
@@ -867,7 +851,7 @@ Item
                                 icon.name: "albumfolder-user-trash"
                                 visible: bookmarksDisplay == true && hasRemoved == false
 
-                                onTriggered: 
+                                onTriggered:
                                 {
                                     BookmarkManager.removeBookmark(expandedCard)
                                     hasRemoved = true
@@ -879,16 +863,20 @@ Item
                                 icon.name: "document-revert-symbolic-rtl"
                                 visible: bookmarksDisplay == true && hasRemoved == true
 
-                                onTriggered: 
+                                onTriggered:
                                 {
                                     BookmarkManager.saveBookmark(expandedCard)
                                     hasRemoved = false
                                 }
                             },
-                            Kirigami.Action 
+                            Kirigami.Action
                             {
-                                text: expandedCard.title !== "Welcome!" ? qsTr("Open Article") : qsTr("Visit our Homepage")
-                                icon.name: expandedCard.title !== "Welcome!" ? "plasma-browser-integration" : "computer-fail-symbolic"
+                                text: expandedCard.title !== "Welcome!"
+                                        ? qsTr("Open Article")
+                                        : qsTr("Visit our Homepage")
+                                icon.name: expandedCard.title !== "Welcome!"
+                                        ? "plasma-browser-integration"
+                                        : "computer-fail-symbolic"
 
                                 onTriggered: Qt.openUrlExternally(expandedCard.link)
                             }
@@ -903,8 +891,8 @@ Item
                             title: expandedCard.author || ""
                             titleAlignment: Qt.AlignLeft | Qt.AlignBottom
                             titleLevel: 2
-                                                        
-                            implicitHeight: clickedCard.height * 0.35                          
+
+                            implicitHeight: clickedCard.height * 0.35
                         }
 
 
@@ -913,7 +901,7 @@ Item
                             id: descriptionScroll
                             contentWidth: availableWidth            // Prevents horizontal scrolling (ugly, eww)
 
-                            ColumnLayout 
+                            ColumnLayout
                             {
                                 spacing: Kirigami.Units.smallSpacing
                                 width: descriptionScroll.availableWidth
@@ -922,7 +910,7 @@ Item
                                 {
                                     text: expandedCard.title || "No title"
                                     maximumLineCount: 3
-                                    
+
                                     padding: 4
                                     wrapMode: Text.WordWrap
                                     font.bold: true
@@ -936,12 +924,12 @@ Item
                                     Layout.fillWidth: true
                                 }
 
-                                TextEdit 
+                                TextEdit
                                 {
                                     text: expandedCard.description + "<p>━━━━━━━━━\n</p>" + Qt.formatDateTime(expandedCard.pubDate, "hh:mm, MMMM d, yyyy") + "<p></p>" + expandedCard.source || "No description available."
 
                                     wrapMode: TextEdit.Wrap
-                                    textFormat: TextEdit.RichText 
+                                    textFormat: TextEdit.RichText
                                     color: Kirigami.Theme.textColor
                                     font.pointSize: 10
                                     padding: 1
@@ -990,13 +978,13 @@ Item
                         contentWidth: cards.width
                         contentHeight: cards.implicitHeight
 
-                        MouseArea 
+                        MouseArea
                         {
                             anchors.fill: parent
                             hoverEnabled: true
                             acceptedButtons: Qt.NoButton
 
-                            onWheel: (wheelEvent) => 
+                            onWheel: (wheelEvent) =>
                             {
                                 var speed = 0.3
                                 var newY = scrollArea.contentY - wheelEvent.angleDelta.y * speed
@@ -1009,10 +997,10 @@ Item
                         }
 
 
-                        Flow    
+                        Flow
                         {
                             id: cards
-                            
+
                             width: articlesArea.width
                             spacing: Kirigami.Units.largeSpacing
 
@@ -1025,34 +1013,41 @@ Item
                                     id: card
 
                                     visible: search.text.length < 3 || model.title.toLowerCase().includes(search.text.toLowerCase()) // Search Bar
-                                    width: root.cardsWidth
+                                    width:   root.cardsWidth
                                     hoverEnabled: true
 
-                                    ToolTip 
+                                    ToolTip
                                     {
                                         text: model.title
                                         delay: 500
                                     }
-                                         
 
                                     contentItem: ColumnLayout
                                     {
                                         spacing: Kirigami.Units.smallSpacing
 
-                                        MouseArea 
+                                        MouseArea
                                         {
                                             z: 1
                                             hoverEnabled: true
                                             anchors.fill: parent
                                             cursorShape: Qt.PointingHandCursor
 
-                                            onClicked: 
+                                            onClicked:
                                             {
                                                 if (isCardExpanded == false)
-                                                     isCardExpanded = !isCardExpanded 
+                                                     isCardExpanded = !isCardExpanded
 
                                                 if (hasRemoved)
                                                      hasRemoved = false
+
+                                                expandedCard.title       = ""
+                                                expandedCard.description = ""
+                                                expandedCard.thumbnail   = ""
+                                                expandedCard.link        = ""
+                                                expandedCard.pubDate     = ""
+                                                expandedCard.author      = ""
+                                                expandedCard.source      = ""
 
                                                 expandedCard.title       = model.title
                                                 expandedCard.description = model.description
@@ -1064,92 +1059,97 @@ Item
                                             }
                                         }
 
-                                        Rectangle 
+                                        Rectangle
                                         {
-                                            Layout.maximumWidth: parent.width
-                                            Layout.minimumHeight: 100
-                                            Layout.maximumHeight: 100
+                                            Layout.maximumWidth:  parent.width
+                                            Layout.minimumHeight: cardsRow.height * 0.2
+                                            Layout.maximumHeight: 400
+
                                             Layout.fillWidth: true
-                                            radius: 4 
+                                            radius: 4
                                             clip: true
 
-                                            Image 
+                                            Image
                                             {
                                                 id: thumbnailCards
+
                                                 source: model.thumbnail !== ""
                                                         ? model.thumbnail
                                                         : Qt.resolvedUrl("../assets/rss.png")
 
+                                                // source: model.thumbnail !== ""
+                                                //         ? model.thumbnail + "?cacheBust=" + Date.now()
+                                                //         : Qt.resolvedUrl("../assets/rss.png")
+
                                                 anchors.fill: parent
                                                 fillMode: Image.PreserveAspectCrop
-                                                cache: true
+                                                cache: false
                                                 smooth: false
                                                 asynchronous: true
 
                                                 sourceSize.width: 200
                                                 sourceSize.height: 200
 
-                                                Timer 
+                                                property bool processed: false
+
+                                                Timer
                                                 {
                                                     id: loadTimer
-                                                    interval: 10000    
-                                                    repeat: false
-                                                    onTriggered: 
+                                                    interval: 10000
+                                                    repeat: true
+
+                                                    onTriggered:
                                                     {
-                                                        if (thumbnailCards.counted) 
-                                                        {
-                                                            root.imagesLoading = Math.max(0, root.imagesLoading - 1)
-                                                            thumbnailCards.counted = false
-                                                        }
                                                         loadingOverlay.visible = false
-                                                        thumbnailCards.source = Qt.resolvedUrl("../assets/rss.png")
+
+                                                        if (status == Image.Null || status == Image.Error)
+                                                        {
+                                                            source = "../assets/rss.png"
+                                                            status == Image.Ready
+                                                        }
+
+                                                        processed = false
+                                                        imagesLoading = 0
                                                     }
                                                 }
 
-
-                                                property bool counted: false
-
-                                                onStatusChanged: 
+                                                onStatusChanged:
                                                 {
-                                                    if (status === Image.Loading && !counted) 
+                                                    loadTimer.start()
+
+                                                    if (status == Image.Null || status == Image.Error)
+                                                    {
+                                                        var tmp = source
+                                                        source  = ""
+                                                        source  = tmp
+                                                    }
+                                                    else if (status == Image.Loading)
                                                     {
                                                         root.imagesLoading += 1
-                                                        counted = true
-                                                        loadTimer.start()
+                                                        loadingOverlay.visible = true
                                                     }
-
-                                                    if ((status === Image.Ready || status === Image.Error) && counted) 
+                                                    else if (status == Image.Ready)
                                                     {
-                                                        root.imagesLoading = Math.max(0, root.imagesLoading - 1)
-                                                        counted = false
-                                                        loadTimer.stop()
-                                                    }
-
-                                                    if (status === Image.Ready)
+                                                        processed = true
+                                                        root.imagesLoading -= 1
                                                         loadingOverlay.visible = false
-
-                                                    else if (status === Image.Error)
-                                                    {
-                                                        loadingOverlay.visible = false
-                                                        source: Qt.resolvedUrl("../assets/rss.png")
                                                     }
-                                                        
-                                                    else loadingOverlay.visible = true
                                                 }
 
+                                                Component.onCompleted: loadTimer.start()
 
-                                                Rectangle 
+                                                Rectangle
                                                 {
                                                     id: loadingOverlay
                                                     anchors.fill: parent
                                                     color: "black"
-                                                    visible: thumbnailCards.status !== Image.Ready
+                                                    visible: false
                                                     opacity: 0.9
 
-                                                    Text 
+                                                    Text
                                                     {
                                                         anchors.centerIn: parent
-                                                        text: (thumbnailCards.status === Image.Error)
+                                                        text: (thumbnailCards.status === Image.Null)
                                                             ? "Image Error"
                                                             : "Loading..."
                                                         color: Kirigami.Theme.textColor
@@ -1159,7 +1159,7 @@ Item
                                             }
 
                                             // FAVICON
-                                            Image 
+                                            Image
                                             {
                                                 id: faviconImage
                                                 width: 20
@@ -1170,39 +1170,39 @@ Item
 
                                                 property bool counted: false
                                                 property string domainCache: ""
-                                                
+
                                                 // Cache domain extraction
-                                                Component.onCompleted: 
+                                                Component.onCompleted:
                                                 {
                                                     if (model.source && model.source.length > 0)
                                                         domainCache = model.source.replace(/^https?:\/\//, "").replace(/\/.*$/, "")
                                                 }
-                                                
-                                                source: domainCache.length > 0 
+
+                                                source: domainCache.length > 0
                                                     ? "https://icons.duckduckgo.com/ip3/" + domainCache + ".ico"
                                                     : ""
 
                                                 sourceSize.width: 32
                                                 sourceSize.height: 32
-                                                
+
                                                 fillMode: Image.PreserveAspectFit
                                                 smooth: true
                                                 asynchronous: true
                                                 cache: true
 
-                                                onStatusChanged: 
+                                                onStatusChanged:
                                                 {
-                                                    if (status === Image.Loading && !counted) 
+                                                    if (status === Image.Loading && !counted)
                                                     {
                                                         root.imagesLoading += 1
                                                         counted = true
                                                     }
-                                                    else if ((status === Image.Ready || status === Image.Error) && counted) 
+                                                    else if ((status === Image.Ready || status === Image.Error) && counted)
                                                     {
                                                         root.imagesLoading = Math.max(0, root.imagesLoading - 1)
                                                         counted = false
-                                                        
-                                                        if (status === Image.Error) 
+
+                                                        if (status === Image.Error)
                                                             source = ""
                                                     }
                                                 }
@@ -1211,36 +1211,14 @@ Item
 
                                         Label
                                         {
-                                            property int maxChars: articlesArea.width > 1000
-                                                                    ? 120
-                                                                    : articlesArea.width > 800
-                                                                        ? 100
-                                                                        : articlesArea.width > 600
-                                                                            ? 100
-                                                                            : articlesArea.width > 400
-                                                                                ? 60
-                                                                                : 60
+                                            property int maxChars: parent.width * 0.9
 
                                             text: model.title.length > maxChars
                                                     ? model.title.substring(0, maxChars - 1) + "…"
                                                     : model.title
                                             maximumLineCount: articlesArea.width > 600
-                                                ? 3
-                                                : articlesArea.width > 400
-                                                    ? 4
-                                                    : 6
-                                            Layout.minimumHeight: articlesArea.width > 600
-                                                ? 60
-                                                : articlesArea.width > 400
-                                                    ? 80
-                                                    : 100
-                                            Layout.maximumHeight: articlesArea.width > 600
-                                                ? 60
-                                                : articlesArea.width > 400
-                                                    ? 80
-                                                    : 100
-
-                                            Layout.maximumWidth: parent.width
+                                                    ? 3
+                                                    : 5
 
                                             wrapMode: Text.WordWrap
                                             font.bold: true
