@@ -55,15 +55,13 @@ Item
     {
         id: expandedCard
 
-        property bool welcome: true
-
-        property string title: "Welcome!"
+        property string title:       "Welcome!"
         property string description: "<p> KBulletin allows you to customize your feed to your liking through the use of the configuration menu, accessed by right-clicking the widget. </p> <p> It is optimized to work with the default sources, but most written news media is supported. Videos, podcasts, and comic strips, are unsupported at this time. </p> <p> You can expand a card by selecting it, and close it by clicking the image or the small button on the bottom right. In panel mode, you can also increase the window's size by dragging the corners. </p> <p> Read Responsibly! :) </p"
-        property string thumbnail: Qt.resolvedUrl("../assets/rss.png")
-        property string link: ""
-        property string pubDate: new Date()
-        property string author: ""
-        property string source: ""
+        property string thumbnail:   Qt.resolvedUrl("../assets/rss.png")
+        property string link:        ""
+        property string pubDate:     new Date()
+        property string author:      ""
+        property string source:      ""
     }
 
 
@@ -78,7 +76,6 @@ Item
 
         KBulletin.fetchSources(activeSources)
         KBulletin.filterSources()
-
 
         // Sidebar Setup
         sidebarSources = {}
@@ -123,7 +120,15 @@ Item
         interval: refreshMinutes * 60 * 1000
         repeat: true
         running: true
-        onTriggered: KBulletin.fetchSources(activeSources)
+
+        onTriggered:
+        {
+            search.text = ""
+            articlesModel.clear()
+            imagesLoading = 0
+
+            KBulletin.fetchSources(activeSources)
+        }
     }
 
 
@@ -554,19 +559,21 @@ Item
                 width: mainArea.width
                 height: Kirigami.Units.gridUnit * 4
 
+                property bool processing: false
+
                 PlasmaComponents.Button
                 {
                     id: refresh
 
                     icon.name: "view-refresh"
-                    enabled: imagesLoading === 0 || bookmarksDisplay === true
+                    enabled: imagesLoading == 0 ? true : false
 
                     onClicked:
                     {
+                        // refresh.enabled = false
+
                         search.text = ""
                         articlesModel.clear()
-                        imagesLoading = 0
-
                         KBulletin.fetchSources(activeSources)
                     }
                 }
@@ -841,7 +848,7 @@ Item
                             {
                                 text: qsTr("Bookmark")
                                 icon.name: "action-rss_tag"
-                                visible: bookmarksDisplay == false && expandedCard.title !== "Welcome!" && expandedCard.title !== "Unsupported Feed"
+                                visible: bookmarksDisplay == false && expandedCard.title !== "Welcome!"
 
                                 onTriggered: BookmarkManager.saveBookmark(expandedCard)
                             },
@@ -1035,12 +1042,6 @@ Item
 
                                             onClicked:
                                             {
-                                                if (isCardExpanded == false)
-                                                     isCardExpanded = !isCardExpanded
-
-                                                if (hasRemoved)
-                                                     hasRemoved = false
-
                                                 expandedCard.title       = ""
                                                 expandedCard.description = ""
                                                 expandedCard.thumbnail   = ""
@@ -1048,6 +1049,14 @@ Item
                                                 expandedCard.pubDate     = ""
                                                 expandedCard.author      = ""
                                                 expandedCard.source      = ""
+
+
+                                                if (isCardExpanded == false)
+                                                     isCardExpanded = true
+
+                                                if (hasRemoved)
+                                                     hasRemoved = false
+
 
                                                 expandedCard.title       = model.title
                                                 expandedCard.description = model.description
@@ -1062,11 +1071,11 @@ Item
                                         Rectangle
                                         {
                                             Layout.maximumWidth:  parent.width
-                                            Layout.minimumHeight: cardsRow.height * 0.2
+                                            Layout.minimumHeight: cardsRow.height * 0.22
                                             Layout.maximumHeight: 400
 
                                             Layout.fillWidth: true
-                                            radius: 4
+                                            radius: 4f
                                             clip: true
 
                                             Image
@@ -1076,10 +1085,6 @@ Item
                                                 source: model.thumbnail !== ""
                                                         ? model.thumbnail
                                                         : Qt.resolvedUrl("../assets/rss.png")
-
-                                                // source: model.thumbnail !== ""
-                                                //         ? model.thumbnail + "?cacheBust=" + Date.now()
-                                                //         : Qt.resolvedUrl("../assets/rss.png")
 
                                                 anchors.fill: parent
                                                 fillMode: Image.PreserveAspectCrop
@@ -1096,20 +1101,21 @@ Item
                                                 {
                                                     id: loadTimer
                                                     interval: 10000
-                                                    repeat: true
+                                                    repeat: false
 
                                                     onTriggered:
                                                     {
                                                         loadingOverlay.visible = false
 
-                                                        if (status == Image.Null || status == Image.Error)
+                                                        // Stops app from hanging
+                                                        if (status !== Image.Ready)
                                                         {
                                                             source = "../assets/rss.png"
                                                             status == Image.Ready
                                                         }
 
                                                         processed = false
-                                                        imagesLoading = 0
+                                                        root.imagesLoading = 0
                                                     }
                                                 }
 
@@ -1117,22 +1123,16 @@ Item
                                                 {
                                                     loadTimer.start()
 
-                                                    if (status == Image.Null || status == Image.Error)
-                                                    {
-                                                        var tmp = source
-                                                        source  = ""
-                                                        source  = tmp
-                                                    }
-                                                    else if (status == Image.Loading)
+                                                    if (status == Image.Loading)
                                                     {
                                                         root.imagesLoading += 1
                                                         loadingOverlay.visible = true
                                                     }
-                                                    else if (status == Image.Ready)
+                                                    else if (processed == false && status !== Image.Loading)
                                                     {
-                                                        processed = true
                                                         root.imagesLoading -= 1
                                                         loadingOverlay.visible = false
+                                                        processed = true
                                                     }
                                                 }
 
@@ -1168,7 +1168,7 @@ Item
                                                 anchors.right: parent.right
                                                 z: 2
 
-                                                property bool counted: false
+                                                property bool processed: false
                                                 property string domainCache: ""
 
                                                 // Cache domain extraction
@@ -1187,23 +1187,40 @@ Item
 
                                                 fillMode: Image.PreserveAspectFit
                                                 smooth: true
+                                                cache: false
                                                 asynchronous: true
-                                                cache: true
+
+                                                Timer
+                                                {
+                                                    id: favTimer
+                                                    interval: 5000
+                                                    repeat: false
+
+                                                    onTriggered:
+                                                    {
+                                                        if (status !== Image.Ready)
+                                                        {
+                                                            source = ""
+                                                            status == Image.Ready
+                                                        }
+
+                                                        processed = false
+                                                        root.imagesLoading = 0
+                                                    }
+                                                }
 
                                                 onStatusChanged:
                                                 {
-                                                    if (status === Image.Loading && !counted)
+                                                    favTimer.start()
+
+                                                    if (status == Image.Loading)
                                                     {
                                                         root.imagesLoading += 1
-                                                        counted = true
                                                     }
-                                                    else if ((status === Image.Ready || status === Image.Error) && counted)
+                                                    else if (processed == false && status !== Image.Loading)
                                                     {
-                                                        root.imagesLoading = Math.max(0, root.imagesLoading - 1)
-                                                        counted = false
-
-                                                        if (status === Image.Error)
-                                                            source = ""
+                                                        root.imagesLoading -= 1
+                                                        processed = true
                                                     }
                                                 }
                                             }
@@ -1211,7 +1228,7 @@ Item
 
                                         Label
                                         {
-                                            property int maxChars: parent.width * 0.9
+                                            property int maxChars: parent.width * 0.5
 
                                             text: model.title.length > maxChars
                                                     ? model.title.substring(0, maxChars - 1) + "…"
