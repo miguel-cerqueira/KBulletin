@@ -39,14 +39,14 @@ Item
             if (articlesArea.width > 2000)
                 return (articlesArea.width / 6) - Kirigami.Units.largeSpacing
 
-            else return (articlesArea.width / (Math.max(1, Math.round(articlesArea.width / 200)))) - Kirigami.Units.largeSpacing
+            else return (articlesArea.width / (Math.max(1, Math.round(articlesArea.width / 200)))) - Kirigami.Units.mediumSpacing
         }
         else
         {
             if (articlesArea.width > 2000)
                 return (articlesArea.width / 5) - Kirigami.Units.largeSpacing
 
-            else return (articlesArea.width / (Math.max(1, Math.round(articlesArea.width / 240)))) - Kirigami.Units.largeSpacing
+            else return (articlesArea.width / (Math.max(1, Math.round(articlesArea.width / 240)))) - Kirigami.Units.mediumSpacing
         }
     }
 
@@ -56,9 +56,10 @@ Item
         id: expandedCard
 
         property string title:       "Welcome!"
-        property string description: "<p> KBulletin allows you to customize your feed to your liking through the use of the configuration menu, accessed by right-clicking the widget. </p> <p> It is optimized to work with the default sources, but most written news media is supported. Videos, podcasts, and comic strips, are unsupported at this time. </p> <p> You can expand a card by selecting it, and close it by clicking the image or the small button on the bottom right. In panel mode, you can also increase the window's size by dragging the corners. </p> <p> Read Responsibly! :) </p"
+        // property string description: "<p> KBulletin allows you to customize your feed to your liking through the use of the configuration menu, accessed by right-clicking the widget. </p> <p> It is optimized to work with the default sources, but most written news media is supported. Videos, podcasts, and comic strips, are unsupported at this time. </p> <p> You can expand a card by selecting it, and close it by clicking the image or the small button on the bottom right. In panel mode, you can also increase the window's size by dragging the corners. </p> <p> Read Responsibly! :) </p"
+        property string description: "<p>KBulletin allows you to customize your feed to your liking through the use of the configuration menu, accessible by right-clicking the widget.</p> <p>It is optimized to work with the default sources, but most written news media is supported. Videos, podcasts, and comic strips are unsupported at this time.</p> <p>To get started, select your preferred sources and press the ⟳ button. You also can expand a news card by selecting it, and close it by either clicking its thumbnail or the small > button on the bottom right. In panel mode, you can also quickly increase the window's size by dragging its corners.</p> <p>Read Responsibly! :)</p>"
         property string thumbnail:   Qt.resolvedUrl("../assets/rss.png")
-        property string link:        ""
+        property string link:        "https://github.com/miguel-cerqueira/KBulletin/"
         property string pubDate:     new Date()
         property string author:      ""
         property string source:      ""
@@ -92,7 +93,7 @@ Item
         {
             allSources = JSON.parse(plasmoid.configuration.sources)
 
-            if (activeSources.length === allSources.length)         // accounting for pressing defaults button
+            if (activeSources.length === allSources.length)         // Accounting for pressing defaults button
             {
                 var sources = JSON.parse(plasmoid.configuration.sources).map(entry => entry.url)
 
@@ -143,7 +144,7 @@ Item
         {
             Layout.preferredWidth: 150
             Layout.minimumWidth: 150
-            Layout.maximumWidth: 200
+            Layout.maximumWidth: 185
 
 
             // Loading Indicator
@@ -178,8 +179,8 @@ Item
 
                 property bool bookmarksVisible: false
                 property bool topicsVisible: false
-                property int selectedTopicIndex: -1
-                property int selectedSourceIndex: -1
+                property int  selectedTopicIndex: -1
+                property int  selectedSourceIndex: -1
 
 
                 // Topics Button
@@ -346,6 +347,25 @@ Item
 
                     model: filteredSourcesModel
 
+                    MouseArea
+                    {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        acceptedButtons: Qt.NoButton
+
+                        onWheel: (wheelEvent) =>
+                        {
+                            var speed = 0.3
+                            var newY = sourcesList.contentY - wheelEvent.angleDelta.y * speed
+                            var maxY = sourcesList.contentHeight - sourcesList.height
+
+                            sourcesList.contentY = Math.max(0, Math.min(newY, maxY))
+
+                            wheelEvent.accepted = true
+                        }
+                    }
+
+
                     delegate: Rectangle
                     {
                         id: sourceDelegate
@@ -368,9 +388,12 @@ Item
                             onClicked:
                             {
                                 let url = sidebarSources[model.source] || ""
-                                if (!url) return
+
+                                if (!url)
+                                        return
 
                                 let idx = activeSources.indexOf(url)
+
                                 if (idx !== -1)
                                     activeSources.splice(idx, 1)
                                 else
@@ -396,7 +419,6 @@ Item
                             padding: 6
 
 
-
                             // Active Indicator
                             Text
                             {
@@ -417,11 +439,15 @@ Item
                                 width: 20
                                 height: 20
 
-                                property bool counted: false
+                                property bool   counted: false
                                 property string cachedDomain:
                                 {
+                                    //  <3  ->  https://duckduckgo.com/duckduckgo-help-pages/company/donations
+
                                     let url = model.url || ""
-                                    if (!/^https?:\/\//i.test(url)) url = "https://" + url
+
+                                    if (!/^https?:\/\//i.test(url))
+                                        url = "https://" + url
 
                                     let domainMatch = url.match(/^https?:\/\/(?:feeds\.|rss\.)?([^\/]+)/i)
                                     return domainMatch ? domainMatch[1] : ""
@@ -436,7 +462,7 @@ Item
 
                                 onStatusChanged:
                                 {
-                                    if (status === Image.Error)
+                                    if (status == Image.Error || status == Image.Null)
                                         source = Qt.resolvedUrl("../assets/newspaper.png")
                                 }
 
@@ -488,7 +514,7 @@ Item
                     anchors.topMargin: 2
                     anchors.bottomMargin: 2
 
-                    visible: scrollArea.contentY > 0 && imagesLoading === 0
+                    visible: scrollArea.contentY > 0 && imagesLoading == 0
                     z: 999
 
                     MouseArea
@@ -517,7 +543,7 @@ Item
                     anchors.topMargin: 2
                     anchors.bottomMargin: 2
 
-                    visible: scrollArea.contentY + scrollArea.height < scrollArea.contentHeight && imagesLoading === 0
+                    visible: scrollArea.contentY + scrollArea.height < scrollArea.contentHeight && imagesLoading == 0
                     z: 999
 
                     MouseArea
@@ -566,15 +592,84 @@ Item
                     id: refresh
 
                     icon.name: "view-refresh"
-                    enabled: imagesLoading == 0 ? true : false
+                    // enabled: imagesLoading == 0 ? true : false
+
+                    Timer
+                    {
+                        // Preventing click spam breaking UI
+
+                        id: buttonLock
+                        interval: 2500
+                        repeat: false
+
+                        onTriggered: refresh.enabled = true
+                    }
+
+                    Timer
+                    {
+                        // Might be necessary if user decides to use every source at once, or due to race condition
+
+                        id: failsafeTimer
+                        interval: 15000
+                        repeat: false
+
+                        onTriggered:
+                        {
+                                if (imagesLoading == 0)
+                                  return
+
+                                failsafe.enabled = true
+                                failsafe.visible = true
+                        }
+                    }
 
                     onClicked:
                     {
-                        // refresh.enabled = false
-
+                        refresh.enabled = false
                         search.text = ""
+                        root.imagesLoading = 0
+
                         articlesModel.clear()
                         KBulletin.fetchSources(activeSources)
+                        buttonLock.start()
+                        failsafeTimer.start()
+                    }
+                }
+
+
+                PlasmaComponents.Button
+                {
+                    id: failsafe
+
+                    ToolTip.delay: 500
+                    ToolTip.text: "Restore app if its stuck loading"
+                    ToolTip.visible: hovered
+                    Layout.preferredHeight: 30
+
+                    enabled: false
+                    visible: false
+
+                    contentItem: Row
+                    {
+                        anchors.centerIn: parent
+                        spacing: Kirigami.Units.smallSpacing
+
+                        Text
+                        {
+                            text: "Reset App"
+                            color: Kirigami.Theme.textColor
+                        }
+                    }
+
+                    onClicked:
+                    {
+                        articlesModel.clear()
+                        root.imagesLoading = 0
+                        refresh.enabled = true
+                        activeSources = JSON.parse(plasmoid.configuration.sources).map(entry => entry.url).slice(0, 2)
+
+                        failsafe.enabled = false
+                        failsafe.visible = false
                     }
                 }
 
@@ -584,7 +679,7 @@ Item
                     id: search
 
                     placeholderText: "Search feed…"
-                    enabled: imagesLoading === 0
+                    enabled: imagesLoading == 0
                     Layout.fillWidth: true
                     Layout.minimumWidth: 50
                 }
@@ -601,7 +696,7 @@ Item
                     ToolTip.text: "Replaces feed with your bookmarked articles"
                     ToolTip.visible: hovered
 
-                    enabled: imagesLoading === 0 || imagesLoading === 0 && bookmarksDisplay === true
+                    enabled: imagesLoading == 0 || imagesLoading == 0 && bookmarksDisplay == true
 
                     contentItem: Row
                     {
@@ -893,7 +988,7 @@ Item
                         banner
                         {
                             source: expandedCard.thumbnail  || Qt.resolvedUrl("../assets/rss.png")
-                            fillMode: Image.PreserveAspectCrop
+                            fillMode: Image.PreserveAspectFit
 
                             title: expandedCard.author || ""
                             titleAlignment: Qt.AlignLeft | Qt.AlignBottom
@@ -1075,7 +1170,7 @@ Item
                                             Layout.maximumHeight: 400
 
                                             Layout.fillWidth: true
-                                            radius: 4f
+                                            radius: 4
                                             clip: true
 
                                             Image
@@ -1095,48 +1190,39 @@ Item
                                                 sourceSize.width: 200
                                                 sourceSize.height: 200
 
-                                                property bool processed: false
-
                                                 Timer
                                                 {
-                                                    id: loadTimer
+                                                    id: imgTimer
                                                     interval: 10000
                                                     repeat: false
 
                                                     onTriggered:
                                                     {
-                                                        loadingOverlay.visible = false
-
-                                                        // Stops app from hanging
                                                         if (status !== Image.Ready)
                                                         {
+                                                            source = ""
                                                             source = "../assets/rss.png"
-                                                            status == Image.Ready
+                                                            root.imagesLoading -= 1
                                                         }
-
-                                                        processed = false
-                                                        root.imagesLoading = 0
                                                     }
                                                 }
 
                                                 onStatusChanged:
                                                 {
-                                                    loadTimer.start()
+                                                    imgTimer.start()
 
-                                                    if (status == Image.Loading)
+                                                    if (status !== Image.Ready)
                                                     {
                                                         root.imagesLoading += 1
                                                         loadingOverlay.visible = true
                                                     }
-                                                    else if (processed == false && status !== Image.Loading)
+                                                    else
                                                     {
                                                         root.imagesLoading -= 1
                                                         loadingOverlay.visible = false
-                                                        processed = true
+                                                        imgTimer.stop()
                                                     }
                                                 }
-
-                                                Component.onCompleted: loadTimer.start()
 
                                                 Rectangle
                                                 {
@@ -1168,10 +1254,8 @@ Item
                                                 anchors.right: parent.right
                                                 z: 2
 
-                                                property bool processed: false
                                                 property string domainCache: ""
 
-                                                // Cache domain extraction
                                                 Component.onCompleted:
                                                 {
                                                     if (model.source && model.source.length > 0)
@@ -1186,49 +1270,15 @@ Item
                                                 sourceSize.height: 32
 
                                                 fillMode: Image.PreserveAspectFit
-                                                smooth: true
+                                                smooth: false
                                                 cache: false
                                                 asynchronous: true
-
-                                                Timer
-                                                {
-                                                    id: favTimer
-                                                    interval: 5000
-                                                    repeat: false
-
-                                                    onTriggered:
-                                                    {
-                                                        if (status !== Image.Ready)
-                                                        {
-                                                            source = ""
-                                                            status == Image.Ready
-                                                        }
-
-                                                        processed = false
-                                                        root.imagesLoading = 0
-                                                    }
-                                                }
-
-                                                onStatusChanged:
-                                                {
-                                                    favTimer.start()
-
-                                                    if (status == Image.Loading)
-                                                    {
-                                                        root.imagesLoading += 1
-                                                    }
-                                                    else if (processed == false && status !== Image.Loading)
-                                                    {
-                                                        root.imagesLoading -= 1
-                                                        processed = true
-                                                    }
-                                                }
                                             }
                                         }
 
                                         Label
                                         {
-                                            property int maxChars: parent.width * 0.5
+                                            property int maxChars: parent.width * 0.42
 
                                             text: model.title.length > maxChars
                                                     ? model.title.substring(0, maxChars - 1) + "…"

@@ -1,10 +1,10 @@
 
 // ---------------------------------- ES5 Helpers -----------------------------------------
-function getAttributeValue(node, attributeName) 
+function getAttributeValue(node, attributeName)
 {
-    if (node.attributes) 
+    if (node.attributes)
     {
-        for (var i = 0; i < node.attributes.length; i++) 
+        for (var i = 0; i < node.attributes.length; i++)
         {
             var attr = node.attributes[i]
 
@@ -17,18 +17,18 @@ function getAttributeValue(node, attributeName)
 }
 
 
-function getTextContent(node) 
+function getTextContent(node)
 {
     if (!node) return ""
 
     var text = ""
     var children = node.childNodes
 
-    for (var i = 0; i < children.length; i++) 
+    for (var i = 0; i < children.length; i++)
     {
         var child = children[i]
 
-        if (child.nodeType === 3 || child.nodeType === 4)             // TEXT_NODE -> 3 
+        if (child.nodeType === 3 || child.nodeType === 4)             // TEXT_NODE -> 3
             text += child.nodeValue                                   // CDATA_SECTION -> 4
     }
 
@@ -36,14 +36,14 @@ function getTextContent(node)
 }
 
 
-function forEachChild(root, fn) 
+function forEachChild(root, fn)
 {
     if (!root || !root.childNodes)
         return
 
     var children = root.childNodes
 
-    for (var i = 0; i < children.length; i++) 
+    for (var i = 0; i < children.length; i++)
     {
         var child = children[i]
 
@@ -53,7 +53,7 @@ function forEachChild(root, fn)
 }
 
 
-function cleanText(str) 
+function cleanText(str)
 {
     if (!str) return ""
     str = str.replace(/<[^>]+>/g, "")
@@ -62,29 +62,29 @@ function cleanText(str)
 }
 
 
-function getElementByName(node, elementName) 
+function getElementByName(node, elementName)
 {
     var result = null
-    
-    forEachChild(node, function(child) 
+
+    forEachChild(node, function(child)
     {
-        if (!result) 
+        if (!result)
         {
             var nodeName = child.nodeName.toLowerCase()
             var localName = child.localName ? child.localName.toLowerCase() : ''
             var targetName = elementName.toLowerCase()
-            
+
             if (nodeName === targetName || localName === targetName || nodeName.indexOf(':' + targetName) !== -1)
                 result = child
         }
     })
-    
+
     return result
 }
 
 
 // ---------------------------------- Main -----------------------------------------
-function checkHTML(str) 
+function checkHTML(str)
 {
     if (!str || typeof str !== "string")
         return "";
@@ -99,7 +99,7 @@ function checkHTML(str)
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/&nbsp;/g, ' ')
-        .replace(/&#x([0-9a-fA-F]+);/g, function(match, hex) 
+        .replace(/&#x([0-9a-fA-F]+);/g, function(match, hex)
         {
             return String.fromCharCode(parseInt(hex, 16))
         });
@@ -110,7 +110,7 @@ function parseDescriptionRSS(description)
 {
     if (description === "" || !description || typeof description !== "string" )
         return ""
-    
+
     description = description.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
     description = description.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "")
     description = description.replace(/<a\b[^>]*>(.*?)<\/a>/gi, "$1")
@@ -123,9 +123,9 @@ function parseDescriptionRSS(description)
 }
 
 
-function parseArticleRSS(articleItem) 
+function parseArticleRSS(articleItem)
 {
-    var article = 
+    var article =
     {
         title:       "",
         link:        "",
@@ -136,105 +136,105 @@ function parseArticleRSS(articleItem)
         source:      ""
     }
 
-    var articleMap = 
+    var articleMap =
     {
         // RSS Elements
-        "title": function(node) 
-        { 
-            article.title = getTextContent(node) 
-        },
-        "link": function(node) 
+        "title": function(node)
         {
-            if (!article.link) 
+            article.title = getTextContent(node)
+        },
+        "link": function(node)
+        {
+            if (!article.link)
             {
                 var linkText = getTextContent(node)
                 if (linkText)
                     article.link = linkText
-                else 
+                else
                 {
                     var href = getAttributeValue(node, "href")
                     var rel = getAttributeValue(node, "rel")
-                    
+
                     if (href && (!rel || rel === "alternate"))
                         article.link = href
                 }
             }
         },
-        "guid": function(node) 
+        "guid": function(node)
         {
             var guid = getTextContent(node)
 
             if (guid && guid.indexOf('http') === 0 && !article.link)
                 article.link = guid
-        },    
-        "description": function(node) 
+        },
+        "description": function(node)
         {
             var text = getTextContent(node)
-            article.description = parseDescriptionRSS(text) 
+            article.description = parseDescriptionRSS(text)
         },
-        "encoded": function(node) 
-        { 
+        "encoded": function(node)
+        {
             var text = getTextContent(node)
 
             if (text && text.length > article.description.length)
                 article.description = parseDescriptionRSS(text)
         },
-        "pubdate": function(node) 
+        "pubdate": function(node)
         {
-            article.pubDate = getTextContent(node) 
+            article.pubDate = getTextContent(node)
         },
-        "date": function(node) 
+        "date": function(node)
         {
             if (!article.pubDate)
-                article.pubDate = getTextContent(node) 
+                article.pubDate = getTextContent(node)
         },
-        "author": function(node) 
+        "author": function(node)
         {
             if (!article.author)
-                article.author = getTextContent(node) 
+                article.author = getTextContent(node)
         },
-        "creator": function(node) 
-        { 
+        "creator": function(node)
+        {
             if (!article.author)
-                article.author = getTextContent(node) 
+                article.author = getTextContent(node)
         },
-        "credit": function(node) 
-        { 
+        "credit": function(node)
+        {
             if (!article.author)
-                article.author = getTextContent(node) 
+                article.author = getTextContent(node)
         },
 
         // Atom Elements
-        "id": function(node) 
+        "id": function(node)
         {
             var id = getTextContent(node)
-            
+
             if (id && id.indexOf('http') === 0 && !article.link)
                 article.link = id
         },
-        "summary": function(node) 
+        "summary": function(node)
         {
-            if (!article.description) 
+            if (!article.description)
             {
                 var text = getTextContent(node)
                 article.description = parseDescriptionRSS(text)
             }
         },
-        "content": function(node) 
+        "content": function(node)
         {
             var type = getAttributeValue(node, "type")
             var url = getAttributeValue(node, "url")
             var src = getAttributeValue(node, "src")
 
             // Atom
-            if (type && (type === "html" || type === "xhtml" || type === "text")) 
+            if (type && (type === "html" || type === "xhtml" || type === "text"))
             {
                 var text = getTextContent(node)
-                if (text && text.length > article.description.length) 
+                if (text && text.length > article.description.length)
                     article.description = parseDescriptionRSS(text)
             }
             // media:content
-            else if (url && !article.imageUrl) 
+            else if (url && !article.imageUrl)
             {
                 if (type && type.indexOf("image") !== -1)
                     article.imageUrl = url
@@ -244,39 +244,39 @@ function parseArticleRSS(articleItem)
             else if (src && !article.imageUrl)
                 article.imageUrl = src
         },
-        "updated": function(node) 
+        "updated": function(node)
         {
             if (!article.pubDate)
-                article.pubDate = getTextContent(node) 
+                article.pubDate = getTextContent(node)
         },
-        "published": function(node) 
+        "published": function(node)
         {
-            article.pubDate = getTextContent(node) 
+            article.pubDate = getTextContent(node)
         },
-        "issued": function(node) 
-        {
-            if (!article.pubDate)
-                article.pubDate = getTextContent(node) 
-        },
-        "modified": function(node) 
+        "issued": function(node)
         {
             if (!article.pubDate)
-                article.pubDate = getTextContent(node) 
+                article.pubDate = getTextContent(node)
+        },
+        "modified": function(node)
+        {
+            if (!article.pubDate)
+                article.pubDate = getTextContent(node)
         },
 
         // Images
-        "thumbnail": function(node) 
+        "thumbnail": function(node)
         {
             var url = getAttributeValue(node, "url")
 
-            if (url && !article.imageUrl) 
+            if (url && !article.imageUrl)
                 article.imageUrl = url
         },
-        "enclosure": function(node) 
+        "enclosure": function(node)
         {
             var type = getAttributeValue(node, "type")
             var url = getAttributeValue(node, "url") || getAttributeValue(node, "resource")
-            
+
             if (url && !article.imageUrl)
             {
                 if (type && (type.indexOf("image") !== -1 || type.indexOf("jpeg") !== -1 || type.indexOf("jpg") !== -1 || type.indexOf("png") !== -1 || type.indexOf("gif") !== -1))
@@ -292,12 +292,12 @@ function parseArticleRSS(articleItem)
                 article.imageUrl = url
         },
 
-        
-        "group": function(node) 
+
+        "group": function(node)
         {
-            forEachChild(node, function(child) 
+            forEachChild(node, function(child)
             {
-                if (child.localName === "content") 
+                if (child.localName === "content")
                 {
                     var type = getAttributeValue(child, "type")
 
@@ -309,29 +309,29 @@ function parseArticleRSS(articleItem)
     }
 
 
-    forEachChild(articleItem, function(child) 
+    forEachChild(articleItem, function(child)
     {
         var nodeName = child.nodeName.toLowerCase()
         var localName = child.localName ? child.localName.toLowerCase() : ''
         var handler = null
-        
-    
+
+
         if (localName && articleMap[localName])
             handler = articleMap[localName]
-        else if (articleMap[nodeName]) 
+        else if (articleMap[nodeName])
             handler = articleMap[nodeName]
-        else 
+        else
         {
             var nameWithoutPrefix = nodeName.indexOf(':') !== -1 ? nodeName.split(':')[1] : nodeName
 
-            if (articleMap[nameWithoutPrefix]) 
+            if (articleMap[nameWithoutPrefix])
                 handler = articleMap[nameWithoutPrefix]
         }
 
-        
-        if (handler) 
+
+        if (handler)
         {
-            try { handler(child) } 
+            try { handler(child) }
             catch (e) { console.log("Error processing element:", nodeName, e) }
         }
     })
@@ -350,7 +350,7 @@ function parseArticleRSS(articleItem)
         }
         catch (e)
         {
-            article.source = ""            
+            article.source = ""
         }
     }
 
@@ -359,28 +359,27 @@ function parseArticleRSS(articleItem)
 
 
 
-function parseFeed(url, callback) 
+function parseFeed(url, callback)
 {
     var xhr = new XMLHttpRequest()
     xhr.responseType = "document"
     xhr.open("GET", url)
     xhr.setRequestHeader('User-Agent', 'RSS Reader')
 
-    xhr.onreadystatechange = function() 
+    xhr.onreadystatechange = function()
     {
-        if (xhr.readyState !== XMLHttpRequest.DONE) 
+        if (xhr.readyState !== XMLHttpRequest.DONE)
             return
 
-        if (xhr.status === 200) 
+        if (xhr.status === 200)
         {
             var xml = xhr.responseXML
 
-            if (!xml || !xml.documentElement) 
+            if (!xml || !xml.documentElement)
             {
                 callback([], "XML parse error")
                 return
             }
-            
 
             var root = xml.documentElement
             var items = []
@@ -391,7 +390,7 @@ function parseFeed(url, callback)
             var isRDF = rootName === "rdf:rdf" || rootName === "rdf"
             var isAtom = rootName === "feed" || rootName === "atom:feed"
 
-            if (isRDF) 
+            if (isRDF)
             {
                 // Science uses rdf:RDF, where items are siblings of the <channel>
                 container = root
@@ -403,76 +402,76 @@ function parseFeed(url, callback)
                 container = root
                 itemElementName = "entry"
             }
-            else 
+            else
             {
                 // For regular RSS feeds
-                forEachChild(root, function(child) 
+                forEachChild(root, function(child)
                 {
-                    if (child.nodeName.toLowerCase() === "channel") 
-                    { 
+                    if (child.nodeName.toLowerCase() === "channel")
+                    {
                         container = child
-                        return 
+                        return
                     }
                 })
 
-                if (!container) 
+                if (!container)
                 {
                     callback([], "Error: No <channel> element found in the feed.")
                     return
                 }
                 itemElementName = "item"
             }
-            
-            
+
+
             // Plasmoid Config Variables
             var bannedWords = []
-            try 
+            try
             {
                 var raw = plasmoid.configuration.banned || "[]"
                 bannedWords = JSON.parse(raw)
                     .map(word => (word + "").trim().toLowerCase())
                     .filter(word => word.length > 0)
-            } 
-            catch (e) 
+            }
+            catch (e)
             {
                 bannedWords = []
             }
 
 
             var maxArticles = 100 // Default value
-            try 
+            try
             {
                 maxArticles = JSON.parse(plasmoid.configuration.maxArticles || "100")
-                
-                if (isNaN(maxArticles) || maxArticles < 0) 
+
+                if (isNaN(maxArticles) || maxArticles < 0)
                     maxArticles = 100
-            } 
-            catch(e) 
+            }
+            catch(e)
             {
                 maxArticles = 100
             }
 
+
             var node = container.firstChild
 
-            
-            while (node) 
+            while (node)
             {
                 var nodeName = node.nodeName ? node.nodeName.toLowerCase() : ""
                 var localName = node.localName ? node.localName.toLowerCase() : ""
-                
+
                 if (nodeName === itemElementName || localName === itemElementName || (itemElementName === "entry" && (nodeName === "entry" || localName === "entry")))
                 {
                     var article  = parseArticleRSS(node)
                     var combined = cleanText(article.title + " " + article.description)
                     var isBanned = bannedWords.some(
-                        word => 
+                        word =>
                         {
                             var pattern = new RegExp("\\b" + word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i")
                             return pattern.test(combined)
                         }
                     )
 
-                    if (!isBanned) 
+                    if (!isBanned)
                         items.push(article)
 
                     if (items.length >= maxArticles)
@@ -484,7 +483,7 @@ function parseFeed(url, callback)
 
             if (items.length === 0) callback([], "No articles found")
             else callback({ items: items }, "")
-        } 
+        }
         else callback([], "HTTP error: " + xhr.status)
     }
 

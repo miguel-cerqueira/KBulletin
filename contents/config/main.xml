@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0" 
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
 
 
@@ -55,12 +55,12 @@
 
 
         <entry name="sources" type="String">
-            <default>   
+            <default>
                 [
                     {"source":"Le Monde"                ,"url":"https://www.lemonde.fr/en/europe/rss_full.xml"                 ,"topic":"Europe"},
 
                     {"source":"PBS News"                ,"url":"https://www.pbs.org/newshour/feeds/rss/politics"               ,"topic":"USA"},
-                    
+
                     {"source":"The Diplomat"            ,"url":"https://thediplomat.com/feed/"                                 ,"topic":"World"},
 
                     {"source":"France24"                ,"url":"https://www.france24.com/en/europe/rss"                        ,"topic":"Europe"},
@@ -76,7 +76,7 @@
                     {"source":"InsideEVs"               ,"url":"https://insideevs.com/rss/articles/all/"                       ,"topic":"Motors"},
 
                     {"source":"TechRadar"               ,"url":"https://www.techradar.com/feeds/articletype/news"              ,"topic":"Tech"},
-                    
+
                     {"source":"Standard"                ,"url":"https://www.standard.co.uk/sport/football/rss"                 ,"topic":"Football"},
 
                     {"source":"ArsTechnica"             ,"url":"https://feeds.arstechnica.com/arstechnica/index"               ,"topic":"Tech"},
@@ -90,8 +90,6 @@
                     {"source":"Futurology"              ,"url":"https://www.reddit.com/r/Futurology/.rss"                      ,"topic":"Science"},
 
                     {"source":"United Nations"          ,"url":"https://news.un.org/feed/subscribe/en/news/all/rss.xml"        ,"topic":"World"},
-
-                    {"source":"Financial Times"         ,"url":"https://www.ft.com/rss/home"                                   ,"topic":"Economy"},
 
                     {"source":"NVIDIA"                  ,"url":"https://nvidianews.nvidia.com/releases.xml"                    ,"topic":"Tech"},
 
@@ -109,7 +107,7 @@
 
                     {"source":"Bloomberg - Headlines"   ,"url":"https://feeds.bloomberg.com/politics/news.rss"                 ,"topic":"World"},
                     {"source":"Bloomberg - Markets"     ,"url":"https://feeds.bloomberg.com/markets/news.rss"                  ,"topic":"Economy"},
-                    {"source":"Bloomberg - Economy"     ,"url":"https://feeds.bloomberg.com/technology/news.rss"               ,"topic":"Economy"}, 
+                    {"source":"Bloomberg - Economy"     ,"url":"https://feeds.bloomberg.com/technology/news.rss"               ,"topic":"Economy"},
 
                     {"source":"WSJ - Politics"          ,"url":"https://feeds.content.dowjones.io/public/rss/socialpoliticsfeed" ,"topic":"USA"},
                     {"source":"WSJ - Markets"           ,"url":"https://feeds.content.dowjones.io/public/rss/WSJcomUSBusiness"   ,"topic":"Economy"},
@@ -117,16 +115,16 @@
                 ]
             </default>
         </entry>
-        
+
 
         <entry name="banned" type="String">
             <default>
                 [
-                    "Experts Reveal", 
-                    "The Truth About", 
-                    "According To A Scientist", 
-                    "You Won't Believe", 
-                    "Never Guess", 
+                    "Experts Reveal",
+                    "The Truth About",
+                    "According To A Scientist",
+                    "You Won't Believe",
+                    "Never Guess",
                     "One Trick"
                 ]
             </default>

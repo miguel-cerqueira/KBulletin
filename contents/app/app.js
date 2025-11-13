@@ -23,7 +23,7 @@ function filterSources()
             activeSourcesSet.add(source.url)
 
         const isActive = activeSourcesSet.has(source.url) ||
-                        activeSources.indexOf(source.url) !== -1
+                         root.activeSources.indexOf(source.url) !== -1
 
         if (topic)
         {
@@ -39,10 +39,11 @@ function filterSources()
         }
     }
 
+    // This section triggers all sources that match the topic, instead of just highlighting them, not sure which behaviour I like better yet (could be a setting instead)
     if (topic)
     {
-        activeSources.length = 0
-        activeSources.push(...activeSourcesSet)
+        root.activeSources.length = 0
+        root.activeSources.push(...activeSourcesSet)
     }
 
     const finalList = topic
@@ -58,17 +59,18 @@ function loadArticles(source)
 {
     RSSFetcher.parseFeed(source, function(article)
     {
+        // Debug
         // if (!article.items || !Array.isArray(article.items))
         // {
         //     articlesModel.append
         //     ({
-        //         title: "Unsupported Feed",
-        //         link: "",
+        //         title:       "Unsupported Feed",
+        //         link:        "",
         //         description: "<p>Could not parse provided URL.</p>",
-        //         pubDate: "",
-        //         thumbnail: Qt.resolvedUrl("../assets/rss.png"),
-        //         author: "",
-        //         source: source || ""
+        //         pubDate:     "",
+        //         thumbnail:   Qt.resolvedUrl("../assets/rss.png"),
+        //         author:      "",
+        //         source:      source || ""
         //     })
         //     return
         // }
