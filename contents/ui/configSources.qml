@@ -1,4 +1,4 @@
-import QtQml 
+import QtQml
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Dialogs
@@ -12,15 +12,15 @@ import org.kde.plasma.extras as PlasmaExtras
 
 KCM.ScrollViewKCM
 {
-    id: root    
-    
+    id: root
+
 
     property var sourcesList: JSON.parse(plasmoid.configuration.sources)
 
 
-    function refreshSources() 
-    { 
-        sourcesList = JSON.parse(plasmoid.configuration.sources) 
+    function refreshSources()
+    {
+        sourcesList = JSON.parse(plasmoid.configuration.sources)
         feedList.currentIndex = -1
     }
 
@@ -31,22 +31,22 @@ KCM.ScrollViewKCM
         id: feedConfig
 
 
-        Kirigami.InlineMessage 
+        Kirigami.InlineMessage
         {
             id: errorMessage
 
             Layout.fillWidth: true
             visible: false
             type: Kirigami.MessageType.Error
-            
-            function showError(message) 
+
+            function showError(message)
             {
                 text = message
                 visible = true
                 hideTimer.restart()
             }
-            
-            Timer 
+
+            Timer
             {
                 id: hideTimer
                 interval: 3000
@@ -57,7 +57,7 @@ KCM.ScrollViewKCM
 
         Kirigami.FormLayout
         {
-            Kirigami.Separator 
+            Kirigami.Separator
             {
                 Kirigami.FormData.isSection: true
                 Kirigami.FormData.label: qsTr("Add Feed")
@@ -77,20 +77,20 @@ KCM.ScrollViewKCM
                     placeholderText: qsTr("Enter a valid RSS URL…")
                 }
 
-                ComboBox 
+                ComboBox
                 {
                     id: topicNewFeed
                     model: JSON.parse(plasmoid.configuration.topics)
                     Layout.fillHeight: true
                 }
             }
-            
-            Button 
+
+            Button
             {
                 text: qsTr("Insert")
                 Layout.fillHeight: true
 
-                onClicked: 
+                onClicked:
                 {
                     var topic = topicNewFeed.currentText
                     var url   = urlNewFeed.text.trim()
@@ -100,23 +100,23 @@ KCM.ScrollViewKCM
                     var sources = JSON.parse(plasmoid.configuration.sources || "[]")
 
 
-                    var urlExists = sources.some(function(source) 
+                    var urlExists = sources.some(function(source)
                     {
                         return source.url.toLowerCase() === url.toLowerCase()
                     })
 
-                    if (urlExists) 
+                    if (urlExists)
                     {
                         errorMessage.showError(qsTr("The URL is already present in the feed."))
                         return
                     }
 
-                    var nameExists = sources.some(function(source) 
+                    var nameExists = sources.some(function(source)
                     {
                         return source.source.toLowerCase() === name.toLowerCase()
                     })
 
-                    if (nameExists) 
+                    if (nameExists)
                     {
                         errorMessage.showError(qsTr("Name is already taken by another source."))
                         return
@@ -125,15 +125,22 @@ KCM.ScrollViewKCM
 
                     if (!url.startsWith("http://") && !url.startsWith("https://"))
                         url = "https://" + url
-                    
-                    if (name === "") 
+
+
+                    if (/\s/.test(url))
+                    {
+                        errorMessage.showError(qsTr("Invalid URL: contains whitespaces."))
+                        return
+                    }
+
+                    if (name === "")
                     {
                         var host = url.replace(/^https?:\/\//, '').split('/')[0]
                         name = host.replace(/^www\./, '')
                     }
 
 
-                    var newSource = 
+                    var newSource =
                     {
                         source: name,
                         url: url,
@@ -149,23 +156,23 @@ KCM.ScrollViewKCM
                 }
             }
 
-            
-            Kirigami.InlineMessage 
+
+            Kirigami.InlineMessage
             {
                 id: successMessage
 
                 Layout.fillWidth: true
                 visible: false
                 type: Kirigami.MessageType.Positive
-                
-                function showSuccess(message) 
+
+                function showSuccess(message)
                 {
                     text = message
                     visible = true
                     successHideTimer.restart()
                 }
-                
-                Timer 
+
+                Timer
                 {
                     id: successHideTimer
                     interval: 3000
@@ -173,8 +180,8 @@ KCM.ScrollViewKCM
                 }
             }
 
-            
-            Kirigami.Separator 
+
+            Kirigami.Separator
             {
                 Kirigami.FormData.isSection: true
                 Kirigami.FormData.label: qsTr("Feed Management")
@@ -187,13 +194,13 @@ KCM.ScrollViewKCM
                 Layout.fillWidth: true
                 spacing: 10
 
-                Button 
+                Button
                 {
                     text: qsTr("X Remove Feed")
                     Layout.fillHeight: true
                     enabled: feedList.currentIndex >= 0
 
-                    onClicked: 
+                    onClicked:
                     {
                         var updated = sourcesList.slice()
                         updated.splice(feedList.currentIndex, 1)
@@ -201,7 +208,7 @@ KCM.ScrollViewKCM
                     }
                 }
 
-                Button 
+                Button
                 {
                     text: qsTr("Change Name")
                     Layout.fillHeight: true
@@ -210,7 +217,7 @@ KCM.ScrollViewKCM
                     onClicked: changeNameDialog.openDialog(feedList.currentIndex)
                 }
 
-                Button 
+                Button
                 {
                     text: qsTr("Change Topic")
                     Layout.fillHeight: true
@@ -218,16 +225,16 @@ KCM.ScrollViewKCM
 
                     onClicked: changeTopicDialog.openDialog(feedList.currentIndex)
                 }
-                
+
 
                 Item { Layout.fillWidth: true }
 
-                Button 
+                Button
                 {
                     text: qsTr("⟳ Default Settings")
-                    Layout.fillHeight: true   
+                    Layout.fillHeight: true
 
-                    onClicked: 
+                    onClicked:
                     {
                         plasmoid.configuration.sources = plasmoid.configuration.sourcesDefault
                         var sources = JSON.parse(plasmoid.configuration.sources).map(entry => entry.url)
@@ -254,7 +261,7 @@ KCM.ScrollViewKCM
             text: "Source: " + modelData.source + "\nTopic: " + modelData.topic + "\n" + modelData.url
             width: feedList.width
 
-            onClicked: 
+            onClicked:
             {
                 feedList.forceActiveFocus()
                 feedList.currentIndex = index
@@ -262,15 +269,15 @@ KCM.ScrollViewKCM
         }
     }
 
-    
+
     // ---------- Something went wrong ----------
-    MessageDialog 
+    MessageDialog
     {
         id: error
 
         title: qsTr("Error")
-        
-        function showCriticalError(message) 
+
+        function showCriticalError(message)
         {
             text = message
             open()
@@ -279,18 +286,18 @@ KCM.ScrollViewKCM
 
 
     // ---------- Alter Name ----------
-    Dialog 
+    Dialog
     {
         id: changeNameDialog
 
         title: qsTr("Change Source Name")
         modal: true
         anchors.centerIn: parent
-        
+
         property int selectedIndex: -1
         property string currentName: ""
-        
-        function openDialog(index) 
+
+        function openDialog(index)
         {
             selectedIndex = index
             currentName = sourcesList[index].source
@@ -298,31 +305,31 @@ KCM.ScrollViewKCM
             newNameField.selectAll()
             open()
         }
-        
-        contentItem: ColumnLayout 
+
+        contentItem: ColumnLayout
         {
             spacing: Kirigami.Units.largeSpacing
-            
-            Label 
+
+            Label
             {
                 text: qsTr("Current name: %1").arg(changeNameDialog.currentName)
                 font.weight: Font.Bold
             }
-            
-            TextField 
+
+            TextField
             {
                 id: newNameField
                 Layout.fillWidth: true
                 placeholderText: qsTr("Enter new name...")
-                
-                onAccepted: 
+
+                onAccepted:
                 {
                     if (acceptButton.enabled)
                         changeNameDialog.accept()
                 }
             }
-            
-            Label 
+
+            Label
             {
                 id: dialogErrorLabel
 
@@ -332,62 +339,62 @@ KCM.ScrollViewKCM
                 wrapMode: Text.WordWrap
             }
         }
-        
+
         standardButtons: Dialog.Ok | Dialog.Cancel
-        
-        onAccepted: 
+
+        onAccepted:
         {
             var newName = newNameField.text.trim()
-            
-            if (!newName) 
+
+            if (!newName)
             {
                 errorMessage.showError(qsTr("Name field is empty."))
                 return
             }
-            
+
             var sources = JSON.parse(plasmoid.configuration.sources || "[]")
 
-            var nameExists = sources.some(function(source, index) 
+            var nameExists = sources.some(function(source, index)
             {
                 return index !== selectedIndex && source.source.toLowerCase() === newName.toLowerCase()
             })
-            
-            if (nameExists) 
+
+            if (nameExists)
             {
                 errorMessage.showError(qsTr("The name is already in use."))
                 return
             }
-            
+
             var updated = sources.slice()
             updated[selectedIndex].source = newName
             plasmoid.configuration.sources = JSON.stringify(updated)
-            
+
             successMessage.showSuccess(qsTr("Name altered successfully.").arg(name))
-            
+
             close()
         }
-        
-        onOpened: 
+
+        onOpened:
         {
             dialogErrorLabel.visible = false
             newNameField.forceActiveFocus()
         }
     }
 
-    
+
     // ---------- Alter Topic ----------
-    Dialog 
+    Dialog
     {
         id: changeTopicDialog
 
         title: qsTr("Change Source Topic")
         modal: true
         anchors.centerIn: parent
-        
+
         property int selectedIndex: -1
         property string currentTopic: ""
-        
-        function openDialog(index) 
+
+        function openDialog(index)
         {
             selectedIndex = index
             currentTopic = sourcesList[index].topic
@@ -395,49 +402,49 @@ KCM.ScrollViewKCM
             open()
         }
 
-        
-        contentItem: ColumnLayout 
+
+        contentItem: ColumnLayout
         {
             spacing: Kirigami.Units.largeSpacing
-            
-            Label 
+
+            Label
             {
                 text: qsTr("Current topic: %1").arg(changeTopicDialog.currentTopic)
                 font.weight: Font.Bold
             }
-            
-            ComboBox 
+
+            ComboBox
             {
                 id: topicComboBox
                 Layout.fillWidth: true
                 model: JSON.parse(plasmoid.configuration.topics)
             }
         }
-        
-        
+
+
         standardButtons: Dialog.Ok | Dialog.Cancel
-        
-        onAccepted: 
+
+        onAccepted:
         {
             var newTopic = topicComboBox.currentText
-            
-            if (newTopic === currentTopic) 
+
+            if (newTopic === currentTopic)
             {
                 close()
                 return
             }
-            
+
             var sources = JSON.parse(plasmoid.configuration.sources || "[]")
             var updated = sources.slice()
             updated[selectedIndex].topic = newTopic
             plasmoid.configuration.sources = JSON.stringify(updated)
-            
+
             successMessage.showSuccess(qsTr("Topic changed successfully from '%1' to '%2'.").arg(currentTopic).arg(newTopic))
-            
+
             close()
         }
-        
-        onOpened: 
+
+        onOpened:
         {
             topicComboBox.forceActiveFocus()
         }

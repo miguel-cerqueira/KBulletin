@@ -53,9 +53,8 @@
             <default>60</default>
         </entry>
 
-
-        <entry name="sources" type="String">
-            <default>
+        <entry name="sources" type="String">            <!-- Default sources, includes examples of Reddit subs f -->
+            <default><![CDATA[
                 [
                     {"source":"Le Monde"                ,"url":"https://www.lemonde.fr/en/europe/rss_full.xml"                 ,"topic":"Europe"},
 
@@ -63,7 +62,9 @@
 
                     {"source":"The Diplomat"            ,"url":"https://thediplomat.com/feed/"                                 ,"topic":"World"},
 
-                    {"source":"France24"                ,"url":"https://www.france24.com/en/europe/rss"                        ,"topic":"Europe"},
+                    {"source":"France24"                ,"url":"https://www.france24.com/en/europe/rss"                         ,"topic":"Europe"},
+
+                    {"source":"Euronews"                ,"url":"https://www.euronews.com/rss?format=mrss&level=vertical&name=my-europe"         ,"topic":"Europe"},
 
                     {"source":"Kyiv Independent"        ,"url":"https://kyivindependent.com/news-archive/rss/"                 ,"topic":"Europe"},
 
@@ -93,9 +94,6 @@
 
                     {"source":"NVIDIA"                  ,"url":"https://nvidianews.nvidia.com/releases.xml"                    ,"topic":"Tech"},
 
-                    {"source":"NBC - US"                ,"url":"https://feeds.nbcnews.com/nbcnews/public/news"                 ,"topic":"USA"},
-                    {"source":"NBC - Economy"           ,"url":"https://feeds.nbcnews.com/nbcnews/public/business"             ,"topic":"Economy"},
-
                     {"source":"BBC - UK"                ,"url":"https://feeds.bbci.co.uk/news/uk/rss.xml"                      ,"topic":"Europe"},
                     {"source":"BBC - World"             ,"url":"https://feeds.bbci.co.uk/news/world/rss.xml"                   ,"topic":"World"},
 
@@ -109,11 +107,13 @@
                     {"source":"Bloomberg - Markets"     ,"url":"https://feeds.bloomberg.com/markets/news.rss"                  ,"topic":"Economy"},
                     {"source":"Bloomberg - Economy"     ,"url":"https://feeds.bloomberg.com/technology/news.rss"               ,"topic":"Economy"},
 
+                    {"source":"The Atlantic"            ,"url":"https://www.theatlantic.com/feed/all/"                         ,"topic":"USA"},
+
                     {"source":"WSJ - Politics"          ,"url":"https://feeds.content.dowjones.io/public/rss/socialpoliticsfeed" ,"topic":"USA"},
                     {"source":"WSJ - Markets"           ,"url":"https://feeds.content.dowjones.io/public/rss/WSJcomUSBusiness"   ,"topic":"Economy"},
                     {"source":"WSJ - Economy"           ,"url":"https://feeds.content.dowjones.io/public/rss/socialeconomyfeed"  ,"topic":"Economy"}
                 ]
-            </default>
+            ]]></default>
         </entry>
 
 
@@ -122,7 +122,11 @@
                 [
                     "Experts Reveal",
                     "The Truth About",
-                    "According To A Scientist",
+                    "According to a Scientist",
+                    "According to Scientists",
+                    "According to Science",
+                    "According to Experts",
+                    "According to an Expert",
                     "You Won't Believe",
                     "Never Guess",
                     "One Trick"

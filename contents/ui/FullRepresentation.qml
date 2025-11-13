@@ -56,7 +56,6 @@ Item
         id: expandedCard
 
         property string title:       "Welcome!"
-        // property string description: "<p> KBulletin allows you to customize your feed to your liking through the use of the configuration menu, accessed by right-clicking the widget. </p> <p> It is optimized to work with the default sources, but most written news media is supported. Videos, podcasts, and comic strips, are unsupported at this time. </p> <p> You can expand a card by selecting it, and close it by clicking the image or the small button on the bottom right. In panel mode, you can also increase the window's size by dragging the corners. </p> <p> Read Responsibly! :) </p"
         property string description: "<p>KBulletin allows you to customize your feed to your liking through the use of the configuration menu, accessible by right-clicking the widget.</p> <p>It is optimized to work with the default sources, but most written news media is supported. Videos, podcasts, and comic strips are unsupported at this time.</p> <p>To get started, select your preferred sources and press the ⟳ button. You also can expand a news card by selecting it, and close it by either clicking its thumbnail or the small > button on the bottom right. In panel mode, you can also quickly increase the window's size by dragging its corners.</p> <p>Read Responsibly! :)</p>"
         property string thumbnail:   Qt.resolvedUrl("../assets/rss.png")
         property string link:        "https://github.com/miguel-cerqueira/KBulletin/"
