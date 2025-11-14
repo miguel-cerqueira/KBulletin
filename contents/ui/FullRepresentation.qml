@@ -22,32 +22,28 @@ Item
     implicitHeight:       600
 
 
-    property  var activeSources: JSON.parse(plasmoid.configuration.sources).map(entry => entry.url).slice(0, 2)  // init to 2 sources for faster setup
     property  var allSources: JSON.parse(plasmoid.configuration.sources)
+    property  var activeSources: JSON.parse(plasmoid.configuration.sources).map(entry => entry.url).slice(0, 2)  // init to 2 sources for faster setup
+    property  int refreshMinutes: Math.max(1, JSON.parse(plasmoid.configuration.refreshInterval))
+    property  var sidebarSources: ({})
     property bool isCardExpanded: false                                              // for card expansion
     property bool bookmarksDisplay: false                                           // bookmarks trigger
     property bool hasRemoved: false                                                // for bookmark button management
-    property  var sidebarSources: ({})
     property  int imagesLoading: 0
-    property  int refreshMinutes: Math.max(1, JSON.parse(plasmoid.configuration.refreshInterval))
 
 
     property real cardsWidth:
     {
-        if (isCardExpanded)
-        {
-            if (articlesArea.width > 2000)
-                return (articlesArea.width / 6) - Kirigami.Units.largeSpacing
+        var spacing     = isCardExpanded
+                                ? Kirigami.Units.mediumSpacing
+                                : Kirigami.Units.largeSpacing
+        var targetWidth = articlesArea.width < 2000
+                                ? 200
+                                : 300
+        var base    = articlesArea.width
+        var columns = Math.max(2, Math.floor(base / targetWidth))
 
-            else return (articlesArea.width / (Math.max(1, Math.round(articlesArea.width / 200)))) - Kirigami.Units.mediumSpacing
-        }
-        else
-        {
-            if (articlesArea.width > 2000)
-                return (articlesArea.width / 5) - Kirigami.Units.largeSpacing
-
-            else return (articlesArea.width / (Math.max(1, Math.round(articlesArea.width / 240)))) - Kirigami.Units.mediumSpacing
-        }
+        return (base - columns * spacing) / columns
     }
 
 
@@ -913,8 +909,6 @@ Item
                 // isCardExpanded Card
                 ColumnLayout
                 {
-                    id: mainCard
-
                     visible: isCardExpanded
 
                     width: articlesArea.width > 2000
@@ -924,7 +918,6 @@ Item
                     Layout.maximumWidth: width
                     Layout.minimumWidth: 0
                     Layout.fillHeight: true
-
 
                     Kirigami.Card
                     {
@@ -1277,22 +1270,26 @@ Item
 
                                         Label
                                         {
-                                            property int maxChars: parent.width * 0.42
+                                            maximumLineCount: articlesArea.width > 1000
+                                                    ? 4
+                                                    : 3
+
+                                            Layout.minimumHeight: 60
+                                            Layout.maximumHeight: 80
+                                            Layout.preferredHeight: 20 * maximumLineCount
+                                            Layout.fillWidth: true
+
+                                            property int maxChars: (width - 5) * maximumLineCount
 
                                             text: model.title.length > maxChars
                                                     ? model.title.substring(0, maxChars - 1) + "…"
                                                     : model.title
-                                            maximumLineCount: articlesArea.width > 600
-                                                    ? 3
-                                                    : 5
 
                                             wrapMode: Text.WordWrap
                                             font.bold: true
-                                            Layout.fillWidth: true
-                                            Layout.fillHeight: true
-                                            horizontalAlignment: Text.AlignLeft
                                             clip: true
                                             elide: Text.ElideRight
+                                            horizontalAlignment: Text.AlignLeft
                                         }
                                     }
                                 }
