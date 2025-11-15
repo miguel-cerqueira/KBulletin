@@ -20,31 +20,25 @@ KBulletin is designed to allow you to read the latest headlines without shifting
 ##
 
 ### Installation
-1) Select "Add or Manage Widgets"                                    <br>
-       - Right-Click the taskbar                                     <br>
-       - Right-Click the desktop and enter Edit Mode
-       
-2) Click "⤓ Get New Widgets" and "Download New Plasma Widgets"
-
-3) Use the search bar to search for "KBulletin" and click "Install"
-
-4) Go back to "Add or Manage Widgets" and find KBulletin                                             <br>
-       - Drag the widget to the desktop for desktop mode, resize it in Edit Mode                     <br>
-       - Drag the widget to the taskbar for panel mode, open it with a click and resize the corners  <br>
-   
-         
+1) TODO
 
 ### Requirements
-- A Linux system with an up-to-date KDE Plasma desktop environment
-- Minimum 35 years of work experience in media studies
-- Driver License equivalent to Republic of Ireland Category B
+- KDE Plasma desktop environment
 
-<br> <br> <br>
 
+<br> <br>
+
+#### Support Me <3
 <a href="https://ko-fi.com/ediblehuman/">        ![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)                                 </a>
 <a href="https://buymeacoffee.com/ediblehuman">  ![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black) </a>
 <a href="https://coindrop.to/kbulletin/">        ![Bitcoin](https://img.shields.io/badge/Bitcoin-000?style=for-the-badge&logo=bitcoin&logoColor=white)                               </a>
 
 
 ##
-:warning: KBulletin does not make an effort to be compatible with news organizations that block RSS readers.
+:warning: KBulletin does not make an effort to be compatible with news organizations that don't want their content shared.
+
+
+<!-- 
+![Rss](https://img.shields.io/badge/rss-F88900?style=for-the-badge&logo=rss&logoColor=white)
+![DuckDuckGo](https://img.shields.io/badge/duckduckgo-de5833?style=for-the-badge&logo=duckduckgo&logoColor=white)
+-->

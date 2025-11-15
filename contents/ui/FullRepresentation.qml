@@ -1005,7 +1005,7 @@ Item
 
                             onWheel: (wheelEvent) =>
                             {
-                                var speed = 0.3
+                                var speed = 0.6
                                 var newY = scrollArea.contentY - wheelEvent.angleDelta.y * speed
                                 var maxY = scrollArea.contentHeight - scrollArea.height
 
