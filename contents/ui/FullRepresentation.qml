@@ -251,14 +251,16 @@ Item
                         {
                             anchors.fill: parent
                             hoverEnabled: true
-                            onEntered: topicDelegate.hovered = true
-                            onExited: topicDelegate.hovered = false
+                            onEntered: hovered = true
+                            onExited: hovered = false
+
                             onClicked:
                             {
                                 if (sideArea.selectedTopicIndex === index)
                                     sideArea.selectedTopicIndex = -1
                                 else
                                     sideArea.selectedTopicIndex = index
+
                                 KBulletin.filterSources()
                             }
                         }
@@ -276,7 +278,6 @@ Item
                                 visible: index === sideArea.selectedTopicIndex
                                 text: "▶"
                                 color: Kirigami.Theme.highlightColor
-                                font.pointSize: 9
                             }
 
                             // Topic label
@@ -360,7 +361,6 @@ Item
                         }
                     }
 
-
                     delegate: Rectangle
                     {
                         id: sourceDelegate
@@ -379,6 +379,7 @@ Item
                             hoverEnabled: true
                             onEntered: sourceDelegate.hovered = true
                             onExited: sourceDelegate.hovered = false
+                            z: 2
 
                             onClicked:
                             {
@@ -398,7 +399,6 @@ Item
                             }
                         }
 
-
                         ToolTip
                         {
                             visible: sourceDelegate.hovered
@@ -406,20 +406,17 @@ Item
                             delay: 300
                         }
 
-
                         Row
                         {
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: 6
                             padding: 6
 
-
                             // Active Indicator
                             Text
                             {
                                 text: "➔"
                                 color: Kirigami.Theme.highlightColor
-                                font.pointSize: 9
 
                                 visible:
                                 {
@@ -475,7 +472,6 @@ Item
 
                                 text: model.source
                                 wrapMode: Text.Wrap
-                                font.pointSize: 9
 
                                 color: model.topic === (sideArea.selectedTopicIndex >= 0
                                         ? topicsList.model[sideArea.selectedTopicIndex]
@@ -488,78 +484,7 @@ Item
                     }
                 }
             }
-
-
-            // Scrolling Helpers for broken mouse wheels
-            ColumnLayout
-            {
-                Layout.fillWidth: true
-                anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                Kirigami.Icon
-                {
-                    id: scrollArrowUp
-                    source: "go-up"
-                    width: 20
-                    height: 20
-
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.top: parent.top
-                    anchors.topMargin: 2
-                    anchors.bottomMargin: 2
-
-                    visible: scrollArea.contentY > 0 && imagesLoading == 0
-                    z: 999
-
-                    MouseArea
-                    {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        hoverEnabled: true
-
-                        onClicked:
-                        {
-                            var scrollStep = 300
-                            scrollArea.contentY = Math.max(scrollArea.contentY - scrollStep, 0)
-                        }
-                    }
-                }
-
-                Kirigami.Icon
-                {
-                    id: scrollArrowDown
-                    source: "go-down"
-                    width: 20
-                    height: 20
-
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottom: parent.bottom
-                    anchors.topMargin: 2
-                    anchors.bottomMargin: 2
-
-                    visible: scrollArea.contentY + scrollArea.height < scrollArea.contentHeight && imagesLoading == 0
-                    z: 999
-
-                    MouseArea
-                    {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        hoverEnabled: true
-
-                        onClicked:
-                        {
-                            var scrollStep = 300
-                            scrollArea.contentY = Math.min(scrollArea.contentY + scrollStep, scrollArea.contentHeight - scrollArea.height)
-                        }
-                    }
-                }
-
-                Item { height: 5 }
-            }
         }
-
-
 
 
         // ------------------------------------------------ Main Content -------------------------------------------------------
@@ -1277,9 +1202,9 @@ Item
                                             Layout.minimumHeight: 60
                                             Layout.maximumHeight: 80
                                             Layout.preferredHeight: 20 * maximumLineCount
-                                            Layout.fillWidth: true
+                                            Layout.preferredWidth: cardsWidth - 15
 
-                                            property int maxChars: (width - 5) * maximumLineCount
+                                            property int maxChars: (width - 15) * maximumLineCount
 
                                             text: model.title.length > maxChars
                                                     ? model.title.substring(0, maxChars - 1) + "…"

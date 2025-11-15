@@ -461,6 +461,7 @@ function parseFeed(url, callback)
 
                 if (nodeName === itemElementName || localName === itemElementName || (itemElementName === "entry" && (nodeName === "entry" || localName === "entry")))
                 {
+                    // --- Skip articles with banned terms
                     var article  = parseArticleRSS(node)
                     var combined = cleanText(article.title + " " + article.description)
                     var isBanned = bannedWords.some(
@@ -471,7 +472,22 @@ function parseFeed(url, callback)
                         }
                     )
 
-                    if (!isBanned)
+
+                    // --- Skip articles older than 31 days
+                    var pubDate = article.pubDate
+                                    ? new Date(article.pubDate)
+                                    : ""
+                    var isOld = false
+
+                    if (pubDate !== "")
+                    {
+                        var cutoff = new Date()
+                        isOld = pubDate < cutoff.setDate(cutoff.getDate() - 31)
+                    }
+
+
+
+                    if (!isBanned && !isOld)
                         items.push(article)
 
                     if (items.length >= maxArticles)

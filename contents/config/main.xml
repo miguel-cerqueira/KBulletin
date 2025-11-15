@@ -37,13 +37,13 @@
                     "Europe",
                     "USA",
                     "World",
-                    "Media",
+                    "Entertainment",
                     "Tech",
                     "Science",
                     "Space",
                     "Motors",
                     "Economy",
-                    "Football"
+                    "Sports"
                 ]
             </default>
         </entry>
@@ -72,21 +72,25 @@
 
                     {"source":"Science"                 ,"url":"https://www.science.org/rss/news_current.xml"                  ,"topic":"Science"},
 
+                    {"source":"ProPublica"              ,"url":"https://www.propublica.org/feeds/propublica/main"              ,"topic":"USA"},
+
+                    {"source":"Coda Story"              ,"url":"https://www.codastory.com/feed/"                               ,"topic":"USA"},
+
                     {"source":"The Drive"               ,"url":"https://www.thedrive.com/feed"                                 ,"topic":"Motors"},
 
                     {"source":"InsideEVs"               ,"url":"https://insideevs.com/rss/articles/all/"                       ,"topic":"Motors"},
 
                     {"source":"TechRadar"               ,"url":"https://www.techradar.com/feeds/articletype/news"              ,"topic":"Tech"},
 
-                    {"source":"Standard"                ,"url":"https://www.standard.co.uk/sport/football/rss"                 ,"topic":"Football"},
+                    {"source":"Standard"                ,"url":"https://www.standard.co.uk/sport/football/rss"                 ,"topic":"Sports"},
 
                     {"source":"ArsTechnica"             ,"url":"https://feeds.arstechnica.com/arstechnica/index"               ,"topic":"Tech"},
 
-                    {"source":"IGN"                     ,"url":"https://www.ign.com/rss/articles/feed"                         ,"topic":"Media"},
+                    {"source":"IGN"                     ,"url":"https://www.ign.com/rss/articles/feed"                         ,"topic":"Entertainment"},
 
                     {"source":"New Scientist"           ,"url":"https://www.newscientist.com/feed/home/?cmpid=RSS%7CNSNS-Home" ,"topic":"Science"},
 
-                    {"source":"Premier League"          ,"url":"https://www.reddit.com/r/PremierLeague/.rss"                   ,"topic":"Football"},
+                    {"source":"Premier League"          ,"url":"https://www.reddit.com/r/PremierLeague/.rss"                   ,"topic":"Sports"},
                     {"source":"Tech News"               ,"url":"https://www.reddit.com/r/technews/.rss"                        ,"topic":"Tech"},
                     {"source":"Futurology"              ,"url":"https://www.reddit.com/r/Futurology/.rss"                      ,"topic":"Science"},
 
@@ -103,7 +107,7 @@
                     {"source":"NYTimes - Headlines"     ,"url":"https://rss.nytimes.com/services/xml/rss/nyt/World.xml"        ,"topic":"World"},
                     {"source":"NYTimes - Economy"       ,"url":"https://rss.nytimes.com/services/xml/rss/nyt/Economy.xml"      ,"topic":"Economy"},
 
-                    {"source":"Bloomberg - Headlines"   ,"url":"https://feeds.bloomberg.com/politics/news.rss"                 ,"topic":"World"},
+                    {"source":"Bloomberg - Headlines"   ,"url":"https://feeds.bloomberg.com/politics/news.rss"                 ,"topic":"Economy"},
                     {"source":"Bloomberg - Markets"     ,"url":"https://feeds.bloomberg.com/markets/news.rss"                  ,"topic":"Economy"},
                     {"source":"Bloomberg - Economy"     ,"url":"https://feeds.bloomberg.com/technology/news.rss"               ,"topic":"Economy"},
 
