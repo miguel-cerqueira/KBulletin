@@ -5,7 +5,9 @@
   <p align="center">   A self-curated RSS reader widget for the KDE Plasma desktop environment.  </p>
 </p>
 
-<img width="1100" height="800" alt="kb" src="https://github.com/user-attachments/assets/307adba8-d019-4e63-a6d4-43ad6cf314cc" />
+
+<img width="1292" height="748" alt="KB2" src="https://github.com/user-attachments/assets/efb1317f-b963-4b52-b274-3da930b2f154" />
+
 
 <!-- --------------------------------------------------------------------------------------------------------------------------------------------------- -->
 ##
