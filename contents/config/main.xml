@@ -90,7 +90,7 @@
 
                     {"source":"New Scientist"           ,"url":"https://www.newscientist.com/feed/home/?cmpid=RSS%7CNSNS-Home" ,"topic":"Science"},
 
-                    {"source":"Soccer"                  ,"url":"https://www.reddit.com/r/Soccer/.rss"                          ,"topic":"Sports"},
+                    {"source":"Premier League"          ,"url":"https://www.reddit.com/r/PremierLeague/.rss"                   ,"topic":"Sports"},
                     {"source":"Tech News"               ,"url":"https://www.reddit.com/r/technews/.rss"                        ,"topic":"Tech"},
                     {"source":"Futurology"              ,"url":"https://www.reddit.com/r/Futurology/.rss"                      ,"topic":"Science"},
 
