@@ -20,7 +20,7 @@ KBulletin is a customizable RSS Reader that is quickly accessible through your d
 - Search function to find specific terms or references in your feed
 ##
 
-### Installation
+### 🔧 Installation
 1) Select "Add or Manage Widgets"                                    <br>
        - Right-Click the taskbar                                     <br>
        - Right-Click the desktop and enter Edit Mode
@@ -35,7 +35,7 @@ KBulletin is a customizable RSS Reader that is quickly accessible through your d
    
 
          
-### Requirements
+### 📦 Requirements
 - A Linux system with an up-to-date KDE Plasma desktop environment
 - Minimum 35 years of work experience in media studies
 
