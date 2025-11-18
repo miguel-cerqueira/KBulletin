@@ -11,7 +11,7 @@
 
 <!-- --------------------------------------------------------------------------------------------------------------------------------------------------- -->
 ##
-KBulletin is a customizable RSS Reader that is quickly accessible through your desktop, allowing you to get quickly up-to-date with the lastest headlines without dragging you away from your workspace.
+KBulletin is a customizable RSS Reader that is quickly accessible through your desktop, designed to allow you to get quickly up-to-date with the lastest headlines without stealing focus away from the workspace.
 - Features a panel and desktop mode, tailoring itself to your workflow
 - An interface streamlined for rapid browsing, built around expandable article cards
 - Organize and curate your feed, by selecting sources and topics
@@ -32,7 +32,19 @@ KBulletin is a customizable RSS Reader that is quickly accessible through your d
 4) Go back to "Add or Manage Widgets" and find KBulletin                                             <br>
        - Drag the widget to the desktop for desktop mode, resize it in Edit Mode                     <br>
        - Drag the widget to the taskbar for panel mode, open it with a click and resize the corners  <br>
+
+<br>
+(Alternate Method)
+
+1) Open KDE Discover and select "Plasma Addons"
+
+2) Search for "KBulletin" on the top-left search field and install
+
+3) Through the taskbar, or Edit Mode, find KBulletin on the "Add or Manage widgets" menu             <br>
+       - Drag the widget to the desktop for desktop mode, resize it in Edit Mode                     <br>
+       - Drag the widget to the taskbar for panel mode, open it with a click and resize the corners  <br>
    
+<br>
 
          
 ### 📦 Requirements
